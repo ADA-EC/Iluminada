@@ -1,0 +1,2607 @@
+ARM GAS  /tmp/ccsOxf3Q.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 1
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.syntax unified
+  17              		.file	"usbh_msc.c"
+  18              		.text
+  19              	.Ltext0:
+  20              		.cfi_sections	.debug_frame
+  21              		.section	.text.USBH_MSC_SOFProcess,"ax",%progbits
+  22              		.align	2
+  23              		.thumb
+  24              		.thumb_func
+  26              	USBH_MSC_SOFProcess:
+  27              	.LFB128:
+  28              		.file 1 "Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c"
+   1:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+   2:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   ******************************************************************************
+   3:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @file    usbh_msc.c
+   4:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @author  MCD Application Team
+   5:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @version V3.2.2
+   6:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @date    07-July-2015
+   7:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief   This file implements the MSC class driver functions
+   8:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *          ===================================================================      
+   9:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *                                MSC Class  Description
+  10:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *          =================================================================== 
+  11:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *           This module manages the MSC class V1.0 following the "Universal 
+  12:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *           Serial Bus Mass Storage Class (MSC) Bulk-Only Transport (BOT) Version 1.0
+  13:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *           Sep. 31, 1999".
+  14:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *           This driver implements the following aspects of the specification:
+  15:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *             - Bulk-Only Transport protocol
+  16:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *             - Subclass : SCSI transparent command set (ref. SCSI Primary Commands - 3 (SPC-3))
+  17:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *      
+  18:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *  @endverbatim
+  19:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *
+  20:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   ******************************************************************************
+  21:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @attention
+  22:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *
+  23:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
+  24:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *
+  25:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  26:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * You may not use this file except in compliance with the License.
+  27:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * You may obtain a copy of the License at:
+  28:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *
+  29:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *        http://www.st.com/software_license_agreement_liberty_v2
+  30:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *
+ARM GAS  /tmp/ccsOxf3Q.s 			page 2
+
+
+  31:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * Unless required by applicable law or agreed to in writing, software 
+  32:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * distributed under the License is distributed on an "AS IS" BASIS, 
+  33:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  34:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * See the License for the specific language governing permissions and
+  35:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * limitations under the License.
+  36:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *
+  37:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   ******************************************************************************
+  38:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+  39:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  40:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /* Includes ------------------------------------------------------------------*/
+  41:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  42:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #include "usbh_msc.h"
+  43:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #include "usbh_msc_bot.h"    
+  44:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #include "usbh_msc_scsi.h"
+  45:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  46:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  47:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @addtogroup USBH_LIB
+  48:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  49:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+  50:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  51:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @addtogroup USBH_CLASS
+  52:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  53:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+  54:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  55:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @addtogroup USBH_MSC_CLASS
+  56:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  57:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+  58:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+  59:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @defgroup USBH_MSC_CORE 
+  60:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief    This file includes the mass storage related functions
+  61:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  62:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  63:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  64:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  65:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @defgroup USBH_MSC_CORE_Private_TypesDefinitions
+  66:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  67:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  68:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+  69:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @}
+  70:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  71:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  72:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @defgroup USBH_MSC_CORE_Private_Defines
+  73:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  74:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  75:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+  76:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @}
+  77:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  78:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  79:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @defgroup USBH_MSC_CORE_Private_Macros
+  80:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  81:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  82:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+  83:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @}
+  84:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  85:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  86:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  87:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @defgroup USBH_MSC_CORE_Private_Variables
+ARM GAS  /tmp/ccsOxf3Q.s 			page 3
+
+
+  88:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  89:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  90:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+  91:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @}
+  92:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  93:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  94:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  95:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @defgroup USBH_MSC_CORE_Private_FunctionPrototypes
+  96:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+  97:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+  98:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+  99:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_InterfaceInit  (USBH_HandleTypeDef *phost);
+ 100:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 101:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_InterfaceDeInit  (USBH_HandleTypeDef *phost);
+ 102:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 103:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_Process(USBH_HandleTypeDef *phost);
+ 104:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 105:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_ClassRequest(USBH_HandleTypeDef *phost);
+ 106:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 107:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_SOFProcess(USBH_HandleTypeDef *phost);
+ 108:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 109:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_RdWrProcess(USBH_HandleTypeDef *phost, uint8_t lun);
+ 110:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 111:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** USBH_ClassTypeDef  USBH_msc = 
+ 112:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 113:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   "MSC",
+ 114:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USB_MSC_CLASS,
+ 115:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_MSC_InterfaceInit,
+ 116:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_MSC_InterfaceDeInit,
+ 117:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_MSC_ClassRequest,
+ 118:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_MSC_Process,
+ 119:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_MSC_SOFProcess,
+ 120:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   NULL,
+ 121:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** };
+ 122:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 123:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 124:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 125:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @}
+ 126:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+ 127:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 128:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 129:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @defgroup USBH_MSC_CORE_Exported_Variables
+ 130:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+ 131:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+ 132:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 133:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 134:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @}
+ 135:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+ 136:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 137:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 138:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /** @defgroup USBH_MSC_CORE_Private_Functions
+ 139:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @{
+ 140:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */ 
+ 141:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 142:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 143:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 144:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_InterfaceInit 
+ARM GAS  /tmp/ccsOxf3Q.s 			page 4
+
+
+ 145:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function init the MSC class.
+ 146:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 147:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 148:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 149:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_InterfaceInit (USBH_HandleTypeDef *phost)
+ 150:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {	 
+ 151:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   uint8_t interface = 0; 
+ 152:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef status = USBH_FAIL ;
+ 153:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle;
+ 154:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 155:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   interface = USBH_FindInterface(phost, phost->pActiveClass->ClassCode, MSC_TRANSPARENT, MSC_BOT);
+ 156:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 157:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if(interface == 0xFF) /* Not Valid Interface */
+ 158:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 159:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_DbgLog ("Cannot Find the interface for %s class.", phost->pActiveClass->Name);
+ 160:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     status = USBH_FAIL;      
+ 161:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 162:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   else
+ 163:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 164:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_SelectInterface (phost, interface);
+ 165:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 166:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     phost->pActiveClass->pData = (MSC_HandleTypeDef *)USBH_malloc (sizeof(MSC_HandleTypeDef));
+ 167:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;
+ 168:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 169:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_Desc[0].bEndpointAddress 
+ 170:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 171:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->InEp = (phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_Desc[0
+ 172:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->InEpSize  = phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_De
+ 173:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 174:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     else
+ 175:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 176:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->OutEp = (phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_Desc[
+ 177:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->OutEpSize  = phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_D
+ 178:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 179:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 180:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_Desc[1].bEndpointAddress 
+ 181:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 182:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->InEp = (phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_Desc[1
+ 183:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->InEpSize  = phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_De
+ 184:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 185:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     else
+ 186:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 187:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->OutEp = (phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_Desc[
+ 188:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->OutEpSize  = phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_D
+ 189:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 190:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 191:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->current_lun = 0;
+ 192:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->rw_lun = 0;
+ 193:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->state = MSC_INIT;
+ 194:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->error = MSC_OK;
+ 195:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->req_state = MSC_REQ_IDLE;
+ 196:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->OutPipe = USBH_AllocPipe(phost, MSC_Handle->OutEp);
+ 197:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->InPipe = USBH_AllocPipe(phost, MSC_Handle->InEp);
+ 198:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 199:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_MSC_BOT_Init(phost);
+ 200:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 201:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     /* De-Initialize LUNs information */
+ARM GAS  /tmp/ccsOxf3Q.s 			page 5
+
+
+ 202:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_memset(MSC_Handle->unit, 0, sizeof(MSC_Handle->unit));
+ 203:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 204:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     /* Open the new channels */
+ 205:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_OpenPipe  (phost,
+ 206:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     MSC_Handle->OutPipe,
+ 207:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     MSC_Handle->OutEp,
+ 208:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     phost->device.address,
+ 209:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     phost->device.speed,
+ 210:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     USB_EP_TYPE_BULK,
+ 211:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     MSC_Handle->OutEpSize);  
+ 212:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 213:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_OpenPipe  (phost,
+ 214:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     MSC_Handle->InPipe,
+ 215:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     MSC_Handle->InEp,
+ 216:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     phost->device.address,
+ 217:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     phost->device.speed,
+ 218:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     USB_EP_TYPE_BULK,
+ 219:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     MSC_Handle->InEpSize);     
+ 220:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 221:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 222:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_LL_SetToggle  (phost, MSC_Handle->InPipe,0);
+ 223:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_LL_SetToggle  (phost, MSC_Handle->OutPipe,0);
+ 224:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     status = USBH_OK; 
+ 225:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 226:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return status;
+ 227:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 228:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 229:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 230:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_InterfaceDeInit 
+ 231:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function DeInit the Pipes used for the MSC class.
+ 232:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 233:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 234:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 235:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** USBH_StatusTypeDef USBH_MSC_InterfaceDeInit (USBH_HandleTypeDef *phost)
+ 236:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 237:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;
+ 238:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 239:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if ( MSC_Handle->OutPipe)
+ 240:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 241:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_ClosePipe(phost, MSC_Handle->OutPipe);
+ 242:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_FreePipe  (phost, MSC_Handle->OutPipe);
+ 243:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->OutPipe = 0;     /* Reset the Channel as Free */
+ 244:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 245:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 246:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if ( MSC_Handle->InPipe)
+ 247:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 248:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_ClosePipe(phost, MSC_Handle->InPipe);
+ 249:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_FreePipe  (phost, MSC_Handle->InPipe);
+ 250:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->InPipe = 0;     /* Reset the Channel as Free */
+ 251:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   } 
+ 252:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 253:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if(phost->pActiveClass->pData)
+ 254:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 255:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_free (phost->pActiveClass->pData);
+ 256:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     phost->pActiveClass->pData = 0;
+ 257:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 258:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ARM GAS  /tmp/ccsOxf3Q.s 			page 6
+
+
+ 259:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return USBH_OK;
+ 260:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 261:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 262:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 263:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_ClassRequest 
+ 264:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function is responsible for handling Standard requests
+ 265:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         for MSC class.
+ 266:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 267:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 268:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 269:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_ClassRequest(USBH_HandleTypeDef *phost)
+ 270:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {   
+ 271:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;  
+ 272:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef status = USBH_BUSY;
+ 273:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   uint8_t i;
+ 274:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 275:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   /* Switch MSC REQ state machine */
+ 276:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   switch (MSC_Handle->req_state)
+ 277:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 278:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   case MSC_REQ_IDLE:
+ 279:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   case MSC_REQ_GET_MAX_LUN:   
+ 280:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     /* Issue GetMaxLUN request */
+ 281:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     status = USBH_MSC_BOT_REQ_GetMaxLUN(phost, (uint8_t *)&MSC_Handle->max_lun);
+ 282:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 283:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     /* When devices do not support the GetMaxLun request, this should
+ 284:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****        be considred as only one logical unit is supported */
+ 285:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(status == USBH_NOT_SUPPORTED)
+ 286:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 287:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->max_lun = 0;
+ 288:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       status = USBH_OK;
+ 289:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 290:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 291:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(status == USBH_OK)
+ 292:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 293:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->max_lun = (uint8_t )(MSC_Handle->max_lun) + 1;
+ 294:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       USBH_UsrLog ("Number of supported LUN: %lu", (int32_t)(MSC_Handle->max_lun));
+ 295:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       
+ 296:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       for(i = 0; i < MSC_Handle->max_lun; i++)
+ 297:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       {
+ 298:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         MSC_Handle->unit[i].prev_ready_state = USBH_FAIL;
+ 299:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         MSC_Handle->unit[i].state_changed = 0;
+ 300:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       }
+ 301:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 302:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;
+ 303:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 304:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   case MSC_REQ_ERROR :
+ 305:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     /* a Clear Feature should be issued here */
+ 306:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(USBH_ClrFeature(phost, 0x00) == USBH_OK)
+ 307:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 308:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->req_state = MSC_Handle->prev_req_state; 
+ 309:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }    
+ 310:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;
+ 311:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 312:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   default:
+ 313:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;
+ 314:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 315:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ARM GAS  /tmp/ccsOxf3Q.s 			page 7
+
+
+ 316:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return status; 
+ 317:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 318:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 319:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 320:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_Process 
+ 321:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function is for managing state machine for MSC data transfers 
+ 322:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 323:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 324:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 325:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_Process(USBH_HandleTypeDef *phost)
+ 326:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 327:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef error = USBH_BUSY ;
+ 329:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 330:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef ready_status = USBH_BUSY ;
+ 331:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 332:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   switch (MSC_Handle->state)
+ 333:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 334:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   case MSC_INIT:
+ 335:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 336:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(MSC_Handle->current_lun < MSC_Handle->max_lun)
+ 337:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 338:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 339:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_NOT_READY;
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       /* Switch MSC REQ state machine */
+ 341:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       switch (MSC_Handle->unit[MSC_Handle->current_lun].state)
+ 342:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       {
+ 343:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       case MSC_INIT:
+ 344:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         USBH_UsrLog ("LUN #%d: ", MSC_Handle->current_lun);
+ 345:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_READ_INQUIRY;
+ 346:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         MSC_Handle->timer = phost->Timer;
+ 347:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 348:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       case MSC_READ_INQUIRY:
+ 349:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         scsi_status = USBH_MSC_SCSI_Inquiry(phost, MSC_Handle->current_lun, &MSC_Handle->unit[MSC_H
+ 350:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 351:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         if( scsi_status == USBH_OK)
+ 352:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 353:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           USBH_UsrLog ("Inquiry Vendor  : %s", MSC_Handle->unit[MSC_Handle->current_lun].inquiry.ve
+ 354:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           USBH_UsrLog ("Inquiry Product : %s", MSC_Handle->unit[MSC_Handle->current_lun].inquiry.pr
+ 355:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           USBH_UsrLog ("Inquiry Version : %s", MSC_Handle->unit[MSC_Handle->current_lun].inquiry.re
+ 356:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_TEST_UNIT_READY;        
+ 357:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 358:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         if( scsi_status == USBH_FAIL)
+ 359:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 360:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_REQUEST_SENSE;         
+ 361:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 362:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         else if(scsi_status == USBH_UNRECOVERED_ERROR)
+ 363:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 364:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_IDLE;
+ 365:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_ERROR;
+ 366:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 367:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         break;    
+ 368:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 369:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       case MSC_TEST_UNIT_READY:
+ 370:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         ready_status = USBH_MSC_SCSI_TestUnitReady(phost, MSC_Handle->current_lun);
+ 371:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 372:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         if( ready_status == USBH_OK)
+ARM GAS  /tmp/ccsOxf3Q.s 			page 8
+
+
+ 373:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 374:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           if( MSC_Handle->unit[MSC_Handle->current_lun].prev_ready_state != USBH_OK)
+ 375:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 376:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].state_changed = 1;
+ 377:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             USBH_UsrLog ("MSC Device ready");
+ 378:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           }
+ 379:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           else
+ 380:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 381:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].state_changed = 0;
+ 382:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           }
+ 383:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_READ_CAPACITY10;
+ 384:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_OK;
+ 385:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].prev_ready_state = USBH_OK;
+ 386:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 387:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         if( ready_status == USBH_FAIL)
+ 388:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 389:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           /* Media not ready, so try to check again during 10s */
+ 390:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           if( MSC_Handle->unit[MSC_Handle->current_lun].prev_ready_state != USBH_FAIL)
+ 391:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 392:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].state_changed = 1;
+ 393:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             USBH_UsrLog ("MSC Device NOT ready");
+ 394:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           }
+ 395:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           else
+ 396:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 397:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].state_changed = 0;
+ 398:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           }         
+ 399:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_REQUEST_SENSE; 
+ 400:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_NOT_READY;
+ 401:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].prev_ready_state = USBH_FAIL;
+ 402:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 403:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         else if(ready_status == USBH_UNRECOVERED_ERROR)
+ 404:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 405:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_IDLE;
+ 406:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_ERROR;
+ 407:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 408:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         break;
+ 409:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 410:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       case MSC_READ_CAPACITY10:   
+ 411:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         scsi_status = USBH_MSC_SCSI_ReadCapacity(phost,MSC_Handle->current_lun, &MSC_Handle->unit[M
+ 412:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 413:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         if(scsi_status == USBH_OK)
+ 414:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 415:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           if(MSC_Handle->unit[MSC_Handle->current_lun].state_changed == 1)
+ 416:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 417:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             USBH_UsrLog ("MSC Device capacity : %lu Bytes", \
+ 418:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****               (int32_t)(MSC_Handle->unit[MSC_Handle->current_lun].capacity.block_nbr * MSC_Handle->
+ 419:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             USBH_UsrLog ("Block number : %lu", (int32_t)(MSC_Handle->unit[MSC_Handle->current_lun].
+ 420:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             USBH_UsrLog ("Block Size   : %lu", (int32_t)(MSC_Handle->unit[MSC_Handle->current_lun].
+ 421:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           }
+ 422:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_IDLE;
+ 423:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_OK;
+ 424:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->current_lun++;
+ 425:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 426:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         else if( scsi_status == USBH_FAIL)
+ 427:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 428:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_REQUEST_SENSE;
+ 429:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ARM GAS  /tmp/ccsOxf3Q.s 			page 9
+
+
+ 430:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         else if(scsi_status == USBH_UNRECOVERED_ERROR)
+ 431:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 432:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_IDLE;
+ 433:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_ERROR;
+ 434:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 435:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         break;
+ 436:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 437:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       case MSC_REQUEST_SENSE:
+ 438:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         scsi_status = USBH_MSC_SCSI_RequestSense(phost,  MSC_Handle->current_lun, &MSC_Handle->unit
+ 439:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 440:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         if( scsi_status == USBH_OK)
+ 441:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 442:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           if((MSC_Handle->unit[MSC_Handle->current_lun].sense.key == SCSI_SENSE_KEY_UNIT_ATTENTION)
+ 443:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****              (MSC_Handle->unit[MSC_Handle->current_lun].sense.key == SCSI_SENSE_KEY_NOT_READY) )   
+ 444:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 445:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             
+ 446:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             if((phost->Timer - MSC_Handle->timer) < 10000)
+ 447:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             {
+ 448:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****               MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_TEST_UNIT_READY;
+ 449:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****               break;
+ 450:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             }        
+ 451:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           }
+ 452:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           
+ 453:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           USBH_UsrLog ("Sense Key  : %x", MSC_Handle->unit[MSC_Handle->current_lun].sense.key);
+ 454:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           USBH_UsrLog ("Additional Sense Code : %x", MSC_Handle->unit[MSC_Handle->current_lun].sens
+ 455:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           USBH_UsrLog ("Additional Sense Code Qualifier: %x", MSC_Handle->unit[MSC_Handle->current_
+ 456:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_IDLE;
+ 457:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->current_lun++;
+ 458:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 459:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         if( scsi_status == USBH_FAIL)
+ 460:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 461:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           USBH_UsrLog ("MSC Device NOT ready");
+ 462:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_UNRECOVERED_ERROR; 
+ 463:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 464:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         else if(scsi_status == USBH_UNRECOVERED_ERROR)
+ 465:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 466:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].state = MSC_IDLE;
+ 467:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_ERROR;   
+ 468:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 469:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         break;  
+ 470:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 471:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       case MSC_UNRECOVERED_ERROR: 
+ 472:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         MSC_Handle->current_lun++;
+ 473:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         break;  
+ 474:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 475:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       default:
+ 476:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         break;
+ 477:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       }
+ 478:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       
+ 479:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #if (USBH_USE_OS == 1)
+ 480:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     osMessagePut ( phost->os_event, USBH_CLASS_EVENT, 0);
+ 481:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #endif       
+ 482:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 483:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     else
+ 484:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 485:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->current_lun = 0;
+ 486:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->state = MSC_IDLE;
+ARM GAS  /tmp/ccsOxf3Q.s 			page 10
+
+
+ 487:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #if (USBH_USE_OS == 1)
+ 488:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     osMessagePut ( phost->os_event, USBH_CLASS_EVENT, 0);
+ 489:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #endif 
+ 490:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     phost->pUser(phost, HOST_USER_CLASS_ACTIVE);     
+ 491:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 492:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;
+ 493:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 494:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   case MSC_IDLE:
+ 495:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     error = USBH_OK;  
+ 496:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;
+ 497:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 498:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   default:
+ 499:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break; 
+ 500:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 501:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return error;
+ 502:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 503:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 504:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 505:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 506:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_SOFProcess 
+ 507:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function is for SOF state
+ 508:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 509:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 510:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 511:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_SOFProcess(USBH_HandleTypeDef *phost)
+ 512:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+  29              		.loc 1 512 0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34              	.LVL0:
+ 513:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 514:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return USBH_OK;
+ 515:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+  35              		.loc 1 515 0
+  36 0000 0020     		movs	r0, #0
+  37              	.LVL1:
+  38 0002 7047     		bx	lr
+  39              		.cfi_endproc
+  40              	.LFE128:
+  42              		.section	.text.USBH_MSC_Process,"ax",%progbits
+  43              		.align	2
+  44              		.thumb
+  45              		.thumb_func
+  47              	USBH_MSC_Process:
+  48              	.LFB127:
+ 326:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;
+  49              		.loc 1 326 0
+  50              		.cfi_startproc
+  51              		@ args = 0, pretend = 0, frame = 0
+  52              		@ frame_needed = 0, uses_anonymous_args = 0
+  53              	.LVL2:
+  54 0000 70B5     		push	{r4, r5, r6, lr}
+  55              	.LCFI0:
+  56              		.cfi_def_cfa_offset 16
+  57              		.cfi_offset 4, -16
+ARM GAS  /tmp/ccsOxf3Q.s 			page 11
+
+
+  58              		.cfi_offset 5, -12
+  59              		.cfi_offset 6, -8
+  60              		.cfi_offset 14, -4
+ 327:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef error = USBH_BUSY ;
+  61              		.loc 1 327 0
+  62 0002 D0F84435 		ldr	r3, [r0, #1348]
+  63 0006 DC69     		ldr	r4, [r3, #28]
+  64              	.LVL3:
+ 332:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+  65              		.loc 1 332 0
+  66 0008 237B     		ldrb	r3, [r4, #12]	@ zero_extendqisi2
+  67 000a 23B1     		cbz	r3, .L4
+  68 000c 012B     		cmp	r3, #1
+  69 000e 00F03E81 		beq	.L28
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+  70              		.loc 1 328 0
+  71 0012 0120     		movs	r0, #1
+  72              	.LVL4:
+  73 0014 70BD     		pop	{r4, r5, r6, pc}
+  74              	.LVL5:
+  75              	.L4:
+  76 0016 0646     		mov	r6, r0
+ 336:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+  77              		.loc 1 336 0
+  78 0018 B4F8F810 		ldrh	r1, [r4, #248]
+  79 001c 2368     		ldr	r3, [r4]
+  80 001e 9942     		cmp	r1, r3
+  81 0020 80F02A81 		bcs	.L6
+ 339:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       /* Switch MSC REQ state machine */
+  82              		.loc 1 339 0
+  83 0024 3423     		movs	r3, #52
+  84 0026 03FB0143 		mla	r3, r3, r1, r4
+  85 002a 0122     		movs	r2, #1
+  86 002c 83F89120 		strb	r2, [r3, #145]
+ 341:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       {
+  87              		.loc 1 341 0
+  88 0030 93F89030 		ldrb	r3, [r3, #144]	@ zero_extendqisi2
+  89 0034 082B     		cmp	r3, #8
+  90 0036 00F22C81 		bhi	.L29
+  91 003a DFE813F0 		tbh	[pc, r3, lsl #1]
+  92              	.L8:
+  93 003e 0900     		.2byte	(.L7-.L8)/2
+  94 0040 2A01     		.2byte	(.L29-.L8)/2
+  95 0042 4200     		.2byte	(.L9-.L8)/2
+  96 0044 9B00     		.2byte	(.L10-.L8)/2
+  97 0046 1300     		.2byte	(.L11-.L8)/2
+  98 0048 CE00     		.2byte	(.L12-.L8)/2
+  99 004a 2A01     		.2byte	(.L29-.L8)/2
+ 100 004c 2A01     		.2byte	(.L29-.L8)/2
+ 101 004e 1801     		.2byte	(.L13-.L8)/2
+ 102              		.p2align 1
+ 103              	.L7:
+ 345:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         MSC_Handle->timer = phost->Timer;
+ 104              		.loc 1 345 0
+ 105 0050 3423     		movs	r3, #52
+ 106 0052 03FB0143 		mla	r3, r3, r1, r4
+ 107 0056 0422     		movs	r2, #4
+ARM GAS  /tmp/ccsOxf3Q.s 			page 12
+
+
+ 108 0058 83F89020 		strb	r2, [r3, #144]
+ 346:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 109              		.loc 1 346 0
+ 110 005c D0F88835 		ldr	r3, [r0, #1416]
+ 111 0060 C4F8FC30 		str	r3, [r4, #252]
+ 112              	.L11:
+ 349:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 113              		.loc 1 349 0
+ 114 0064 3422     		movs	r2, #52
+ 115 0066 02FB01F2 		mul	r2, r2, r1
+ 116 006a 9832     		adds	r2, r2, #152
+ 117 006c 2244     		add	r2, r2, r4
+ 118 006e 0732     		adds	r2, r2, #7
+ 119 0070 C9B2     		uxtb	r1, r1
+ 120 0072 3046     		mov	r0, r6
+ 121              	.LVL6:
+ 122 0074 FFF7FEFF 		bl	USBH_MSC_SCSI_Inquiry
+ 123              	.LVL7:
+ 351:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 124              		.loc 1 351 0
+ 125 0078 0346     		mov	r3, r0
+ 126 007a 38B9     		cbnz	r0, .L14
+ 356:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 127              		.loc 1 356 0
+ 128 007c B4F8F820 		ldrh	r2, [r4, #248]
+ 129 0080 3421     		movs	r1, #52
+ 130 0082 01FB0242 		mla	r2, r1, r2, r4
+ 131 0086 0221     		movs	r1, #2
+ 132 0088 82F89010 		strb	r1, [r2, #144]
+ 133              	.L14:
+ 358:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 134              		.loc 1 358 0
+ 135 008c 022B     		cmp	r3, #2
+ 136 008e 09D1     		bne	.L15
+ 360:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 137              		.loc 1 360 0
+ 138 0090 B4F8F830 		ldrh	r3, [r4, #248]
+ 139 0094 3422     		movs	r2, #52
+ 140 0096 02FB0344 		mla	r4, r2, r3, r4
+ 141              	.LVL8:
+ 142 009a 0523     		movs	r3, #5
+ 143 009c 84F89030 		strb	r3, [r4, #144]
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 144              		.loc 1 328 0
+ 145 00a0 0120     		movs	r0, #1
+ 146              	.LVL9:
+ 147 00a2 70BD     		pop	{r4, r5, r6, pc}
+ 148              	.LVL10:
+ 149              	.L15:
+ 362:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 150              		.loc 1 362 0
+ 151 00a4 042B     		cmp	r3, #4
+ 152 00a6 40F0F680 		bne	.L30
+ 364:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_ERROR;
+ 153              		.loc 1 364 0
+ 154 00aa B4F8F830 		ldrh	r3, [r4, #248]
+ 155 00ae 3422     		movs	r2, #52
+ARM GAS  /tmp/ccsOxf3Q.s 			page 13
+
+
+ 156 00b0 02FB0344 		mla	r4, r2, r3, r4
+ 157              	.LVL11:
+ 158 00b4 0120     		movs	r0, #1
+ 159              	.LVL12:
+ 160 00b6 84F89000 		strb	r0, [r4, #144]
+ 365:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 161              		.loc 1 365 0
+ 162 00ba 0223     		movs	r3, #2
+ 163 00bc 84F89130 		strb	r3, [r4, #145]
+ 164 00c0 70BD     		pop	{r4, r5, r6, pc}
+ 165              	.LVL13:
+ 166              	.L9:
+ 370:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 167              		.loc 1 370 0
+ 168 00c2 C9B2     		uxtb	r1, r1
+ 169 00c4 FFF7FEFF 		bl	USBH_MSC_SCSI_TestUnitReady
+ 170              	.LVL14:
+ 372:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 171              		.loc 1 372 0
+ 172 00c8 0246     		mov	r2, r0
+ 173 00ca F8B9     		cbnz	r0, .L16
+ 374:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 174              		.loc 1 374 0
+ 175 00cc B4F8F830 		ldrh	r3, [r4, #248]
+ 176 00d0 3421     		movs	r1, #52
+ 177 00d2 01FB0341 		mla	r1, r1, r3, r4
+ 178 00d6 91F89210 		ldrb	r1, [r1, #146]	@ zero_extendqisi2
+ 179 00da 31B1     		cbz	r1, .L17
+ 376:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             USBH_UsrLog ("MSC Device ready");
+ 180              		.loc 1 376 0
+ 181 00dc 3421     		movs	r1, #52
+ 182 00de 01FB0341 		mla	r1, r1, r3, r4
+ 183 00e2 0120     		movs	r0, #1
+ 184              	.LVL15:
+ 185 00e4 81F8C100 		strb	r0, [r1, #193]
+ 186 00e8 05E0     		b	.L18
+ 187              	.LVL16:
+ 188              	.L17:
+ 381:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           }
+ 189              		.loc 1 381 0
+ 190 00ea 3421     		movs	r1, #52
+ 191 00ec 01FB0341 		mla	r1, r1, r3, r4
+ 192 00f0 0020     		movs	r0, #0
+ 193              	.LVL17:
+ 194 00f2 81F8C100 		strb	r0, [r1, #193]
+ 195              	.L18:
+ 383:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_OK;
+ 196              		.loc 1 383 0
+ 197 00f6 3421     		movs	r1, #52
+ 198 00f8 01FB0343 		mla	r3, r1, r3, r4
+ 199 00fc 0321     		movs	r1, #3
+ 200 00fe 83F89010 		strb	r1, [r3, #144]
+ 384:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].prev_ready_state = USBH_OK;
+ 201              		.loc 1 384 0
+ 202 0102 0021     		movs	r1, #0
+ 203 0104 83F89110 		strb	r1, [r3, #145]
+ 385:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ARM GAS  /tmp/ccsOxf3Q.s 			page 14
+
+
+ 204              		.loc 1 385 0
+ 205 0108 83F89210 		strb	r1, [r3, #146]
+ 206              	.L16:
+ 387:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 207              		.loc 1 387 0
+ 208 010c 022A     		cmp	r2, #2
+ 209 010e 22D1     		bne	.L19
+ 390:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 210              		.loc 1 390 0
+ 211 0110 B4F8F830 		ldrh	r3, [r4, #248]
+ 212 0114 3422     		movs	r2, #52
+ 213 0116 02FB0342 		mla	r2, r2, r3, r4
+ 214 011a 92F89220 		ldrb	r2, [r2, #146]	@ zero_extendqisi2
+ 215 011e 022A     		cmp	r2, #2
+ 216 0120 06D0     		beq	.L20
+ 392:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             USBH_UsrLog ("MSC Device NOT ready");
+ 217              		.loc 1 392 0
+ 218 0122 3422     		movs	r2, #52
+ 219 0124 02FB0342 		mla	r2, r2, r3, r4
+ 220 0128 0121     		movs	r1, #1
+ 221 012a 82F8C110 		strb	r1, [r2, #193]
+ 222 012e 05E0     		b	.L21
+ 223              	.L20:
+ 397:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           }         
+ 224              		.loc 1 397 0
+ 225 0130 3422     		movs	r2, #52
+ 226 0132 02FB0342 		mla	r2, r2, r3, r4
+ 227 0136 0021     		movs	r1, #0
+ 228 0138 82F8C110 		strb	r1, [r2, #193]
+ 229              	.L21:
+ 399:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_NOT_READY;
+ 230              		.loc 1 399 0
+ 231 013c 3422     		movs	r2, #52
+ 232 013e 02FB0344 		mla	r4, r2, r3, r4
+ 233              	.LVL18:
+ 234 0142 0523     		movs	r3, #5
+ 235 0144 84F89030 		strb	r3, [r4, #144]
+ 400:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             MSC_Handle->unit[MSC_Handle->current_lun].prev_ready_state = USBH_FAIL;
+ 236              		.loc 1 400 0
+ 237 0148 0120     		movs	r0, #1
+ 238 014a 84F89100 		strb	r0, [r4, #145]
+ 401:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 239              		.loc 1 401 0
+ 240 014e 0223     		movs	r3, #2
+ 241 0150 84F89230 		strb	r3, [r4, #146]
+ 242 0154 70BD     		pop	{r4, r5, r6, pc}
+ 243              	.LVL19:
+ 244              	.L19:
+ 403:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 245              		.loc 1 403 0
+ 246 0156 042A     		cmp	r2, #4
+ 247 0158 40F09F80 		bne	.L31
+ 405:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_ERROR;
+ 248              		.loc 1 405 0
+ 249 015c B4F8F830 		ldrh	r3, [r4, #248]
+ 250 0160 3422     		movs	r2, #52
+ 251 0162 02FB0344 		mla	r4, r2, r3, r4
+ARM GAS  /tmp/ccsOxf3Q.s 			page 15
+
+
+ 252              	.LVL20:
+ 253 0166 0120     		movs	r0, #1
+ 254 0168 84F89000 		strb	r0, [r4, #144]
+ 406:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 255              		.loc 1 406 0
+ 256 016c 0223     		movs	r3, #2
+ 257 016e 84F89130 		strb	r3, [r4, #145]
+ 258 0172 70BD     		pop	{r4, r5, r6, pc}
+ 259              	.LVL21:
+ 260              	.L10:
+ 411:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 261              		.loc 1 411 0
+ 262 0174 3422     		movs	r2, #52
+ 263 0176 02FB01F2 		mul	r2, r2, r1
+ 264 017a 9032     		adds	r2, r2, #144
+ 265 017c 2244     		add	r2, r2, r4
+ 266 017e 0432     		adds	r2, r2, #4
+ 267 0180 C9B2     		uxtb	r1, r1
+ 268 0182 FFF7FEFF 		bl	USBH_MSC_SCSI_ReadCapacity
+ 269              	.LVL22:
+ 413:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 270              		.loc 1 413 0
+ 271 0186 70B9     		cbnz	r0, .L22
+ 415:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           {
+ 272              		.loc 1 415 0
+ 273 0188 B4F8F830 		ldrh	r3, [r4, #248]
+ 422:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_OK;
+ 274              		.loc 1 422 0
+ 275 018c 3422     		movs	r2, #52
+ 276 018e 02FB0342 		mla	r2, r2, r3, r4
+ 277 0192 0120     		movs	r0, #1
+ 278              	.LVL23:
+ 279 0194 82F89000 		strb	r0, [r2, #144]
+ 423:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->current_lun++;
+ 280              		.loc 1 423 0
+ 281 0198 0021     		movs	r1, #0
+ 282 019a 82F89110 		strb	r1, [r2, #145]
+ 424:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 283              		.loc 1 424 0
+ 284 019e 0344     		add	r3, r3, r0
+ 285 01a0 A4F8F830 		strh	r3, [r4, #248]	@ movhi
+ 286 01a4 70BD     		pop	{r4, r5, r6, pc}
+ 287              	.LVL24:
+ 288              	.L22:
+ 426:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 289              		.loc 1 426 0
+ 290 01a6 0228     		cmp	r0, #2
+ 291 01a8 09D1     		bne	.L23
+ 428:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 292              		.loc 1 428 0
+ 293 01aa B4F8F830 		ldrh	r3, [r4, #248]
+ 294 01ae 3422     		movs	r2, #52
+ 295 01b0 02FB0344 		mla	r4, r2, r3, r4
+ 296              	.LVL25:
+ 297 01b4 0523     		movs	r3, #5
+ 298 01b6 84F89030 		strb	r3, [r4, #144]
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ARM GAS  /tmp/ccsOxf3Q.s 			page 16
+
+
+ 299              		.loc 1 328 0
+ 300 01ba 0120     		movs	r0, #1
+ 301              	.LVL26:
+ 302 01bc 70BD     		pop	{r4, r5, r6, pc}
+ 303              	.LVL27:
+ 304              	.L23:
+ 430:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 305              		.loc 1 430 0
+ 306 01be 0428     		cmp	r0, #4
+ 307 01c0 6DD1     		bne	.L32
+ 432:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_ERROR;
+ 308              		.loc 1 432 0
+ 309 01c2 B4F8F830 		ldrh	r3, [r4, #248]
+ 310 01c6 3422     		movs	r2, #52
+ 311 01c8 02FB0344 		mla	r4, r2, r3, r4
+ 312              	.LVL28:
+ 313 01cc 0120     		movs	r0, #1
+ 314              	.LVL29:
+ 315 01ce 84F89000 		strb	r0, [r4, #144]
+ 433:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 316              		.loc 1 433 0
+ 317 01d2 0223     		movs	r3, #2
+ 318 01d4 84F89130 		strb	r3, [r4, #145]
+ 319 01d8 70BD     		pop	{r4, r5, r6, pc}
+ 320              	.LVL30:
+ 321              	.L12:
+ 438:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 322              		.loc 1 438 0
+ 323 01da 3422     		movs	r2, #52
+ 324 01dc 02FB01F2 		mul	r2, r2, r1
+ 325 01e0 9832     		adds	r2, r2, #152
+ 326 01e2 2244     		add	r2, r2, r4
+ 327 01e4 0432     		adds	r2, r2, #4
+ 328 01e6 C9B2     		uxtb	r1, r1
+ 329 01e8 FFF7FEFF 		bl	USBH_MSC_SCSI_RequestSense
+ 330              	.LVL31:
+ 440:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 331              		.loc 1 440 0
+ 332 01ec 0246     		mov	r2, r0
+ 333 01ee 20BB     		cbnz	r0, .L24
+ 442:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****              (MSC_Handle->unit[MSC_Handle->current_lun].sense.key == SCSI_SENSE_KEY_NOT_READY) )   
+ 334              		.loc 1 442 0
+ 335 01f0 B4F8F830 		ldrh	r3, [r4, #248]
+ 336 01f4 3421     		movs	r1, #52
+ 337 01f6 01FB0341 		mla	r1, r1, r3, r4
+ 338 01fa 91F89C10 		ldrb	r1, [r1, #156]	@ zero_extendqisi2
+ 339 01fe 0629     		cmp	r1, #6
+ 340 0200 01D0     		beq	.L25
+ 442:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****              (MSC_Handle->unit[MSC_Handle->current_lun].sense.key == SCSI_SENSE_KEY_NOT_READY) )   
+ 341              		.loc 1 442 0 is_stmt 0 discriminator 1
+ 342 0202 0229     		cmp	r1, #2
+ 343 0204 10D1     		bne	.L26
+ 344              	.L25:
+ 446:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             {
+ 345              		.loc 1 446 0 is_stmt 1
+ 346 0206 D6F88815 		ldr	r1, [r6, #1416]
+ 347 020a D4F8FC00 		ldr	r0, [r4, #252]
+ARM GAS  /tmp/ccsOxf3Q.s 			page 17
+
+
+ 348              	.LVL32:
+ 349 020e 091A     		subs	r1, r1, r0
+ 350 0210 42F20F70 		movw	r0, #9999
+ 351 0214 8142     		cmp	r1, r0
+ 352 0216 07D8     		bhi	.L26
+ 448:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****               break;
+ 353              		.loc 1 448 0
+ 354 0218 3422     		movs	r2, #52
+ 355 021a 02FB0343 		mla	r3, r2, r3, r4
+ 356 021e 0222     		movs	r2, #2
+ 357 0220 83F89020 		strb	r2, [r3, #144]
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 358              		.loc 1 328 0
+ 359 0224 0120     		movs	r0, #1
+ 449:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****             }        
+ 360              		.loc 1 449 0
+ 361 0226 70BD     		pop	{r4, r5, r6, pc}
+ 362              	.LVL33:
+ 363              	.L26:
+ 456:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->current_lun++;
+ 364              		.loc 1 456 0
+ 365 0228 3421     		movs	r1, #52
+ 366 022a 01FB0341 		mla	r1, r1, r3, r4
+ 367 022e 0120     		movs	r0, #1
+ 368 0230 81F89000 		strb	r0, [r1, #144]
+ 457:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 369              		.loc 1 457 0
+ 370 0234 0344     		add	r3, r3, r0
+ 371 0236 A4F8F830 		strh	r3, [r4, #248]	@ movhi
+ 372              	.L24:
+ 459:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 373              		.loc 1 459 0
+ 374 023a 022A     		cmp	r2, #2
+ 375 023c 09D1     		bne	.L27
+ 462:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 376              		.loc 1 462 0
+ 377 023e B4F8F830 		ldrh	r3, [r4, #248]
+ 378 0242 3422     		movs	r2, #52
+ 379 0244 02FB0344 		mla	r4, r2, r3, r4
+ 380              	.LVL34:
+ 381 0248 0823     		movs	r3, #8
+ 382 024a 84F89030 		strb	r3, [r4, #144]
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 383              		.loc 1 328 0
+ 384 024e 0120     		movs	r0, #1
+ 385 0250 70BD     		pop	{r4, r5, r6, pc}
+ 386              	.LVL35:
+ 387              	.L27:
+ 464:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         {
+ 388              		.loc 1 464 0
+ 389 0252 042A     		cmp	r2, #4
+ 390 0254 25D1     		bne	.L33
+ 466:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           MSC_Handle->unit[MSC_Handle->current_lun].error = MSC_ERROR;   
+ 391              		.loc 1 466 0
+ 392 0256 B4F8F830 		ldrh	r3, [r4, #248]
+ 393 025a 3422     		movs	r2, #52
+ 394 025c 02FB0344 		mla	r4, r2, r3, r4
+ARM GAS  /tmp/ccsOxf3Q.s 			page 18
+
+
+ 395              	.LVL36:
+ 396 0260 0120     		movs	r0, #1
+ 397 0262 84F89000 		strb	r0, [r4, #144]
+ 467:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         }
+ 398              		.loc 1 467 0
+ 399 0266 0223     		movs	r3, #2
+ 400 0268 84F89130 		strb	r3, [r4, #145]
+ 401 026c 70BD     		pop	{r4, r5, r6, pc}
+ 402              	.LVL37:
+ 403              	.L13:
+ 472:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         break;  
+ 404              		.loc 1 472 0
+ 405 026e 0131     		adds	r1, r1, #1
+ 406 0270 A4F8F810 		strh	r1, [r4, #248]	@ movhi
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 407              		.loc 1 328 0
+ 408 0274 0120     		movs	r0, #1
+ 409              	.LVL38:
+ 473:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         
+ 410              		.loc 1 473 0
+ 411 0276 70BD     		pop	{r4, r5, r6, pc}
+ 412              	.LVL39:
+ 413              	.L6:
+ 485:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->state = MSC_IDLE;
+ 414              		.loc 1 485 0
+ 415 0278 0023     		movs	r3, #0
+ 416 027a A4F8F830 		strh	r3, [r4, #248]	@ movhi
+ 486:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #if (USBH_USE_OS == 1)
+ 417              		.loc 1 486 0
+ 418 027e 0125     		movs	r5, #1
+ 419 0280 2573     		strb	r5, [r4, #12]
+ 490:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 420              		.loc 1 490 0
+ 421 0282 D0F89435 		ldr	r3, [r0, #1428]
+ 422 0286 0221     		movs	r1, #2
+ 423 0288 9847     		blx	r3
+ 424              	.LVL40:
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 425              		.loc 1 328 0
+ 426 028a 2846     		mov	r0, r5
+ 427 028c 70BD     		pop	{r4, r5, r6, pc}
+ 428              	.LVL41:
+ 429              	.L28:
+ 495:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;
+ 430              		.loc 1 495 0
+ 431 028e 0020     		movs	r0, #0
+ 432              	.LVL42:
+ 433 0290 70BD     		pop	{r4, r5, r6, pc}
+ 434              	.LVL43:
+ 435              	.L29:
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 436              		.loc 1 328 0
+ 437 0292 0120     		movs	r0, #1
+ 438              	.LVL44:
+ 439 0294 70BD     		pop	{r4, r5, r6, pc}
+ 440              	.LVL45:
+ 441              	.L30:
+ARM GAS  /tmp/ccsOxf3Q.s 			page 19
+
+
+ 442 0296 0120     		movs	r0, #1
+ 443              	.LVL46:
+ 444 0298 70BD     		pop	{r4, r5, r6, pc}
+ 445              	.LVL47:
+ 446              	.L31:
+ 447 029a 0120     		movs	r0, #1
+ 448 029c 70BD     		pop	{r4, r5, r6, pc}
+ 449              	.LVL48:
+ 450              	.L32:
+ 451 029e 0120     		movs	r0, #1
+ 452              	.LVL49:
+ 453 02a0 70BD     		pop	{r4, r5, r6, pc}
+ 454              	.LVL50:
+ 455              	.L33:
+ 456 02a2 0120     		movs	r0, #1
+ 457              	.LVL51:
+ 502:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 458              		.loc 1 502 0
+ 459 02a4 70BD     		pop	{r4, r5, r6, pc}
+ 460              		.cfi_endproc
+ 461              	.LFE127:
+ 463 02a6 00BF     		.section	.text.USBH_MSC_ClassRequest,"ax",%progbits
+ 464              		.align	2
+ 465              		.thumb
+ 466              		.thumb_func
+ 468              	USBH_MSC_ClassRequest:
+ 469              	.LFB126:
+ 270:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;  
+ 470              		.loc 1 270 0
+ 471              		.cfi_startproc
+ 472              		@ args = 0, pretend = 0, frame = 0
+ 473              		@ frame_needed = 0, uses_anonymous_args = 0
+ 474              	.LVL52:
+ 475 0000 38B5     		push	{r3, r4, r5, lr}
+ 476              	.LCFI1:
+ 477              		.cfi_def_cfa_offset 16
+ 478              		.cfi_offset 3, -16
+ 479              		.cfi_offset 4, -12
+ 480              		.cfi_offset 5, -8
+ 481              		.cfi_offset 14, -4
+ 271:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef status = USBH_BUSY;
+ 482              		.loc 1 271 0
+ 483 0002 D0F84435 		ldr	r3, [r0, #1348]
+ 484 0006 DC69     		ldr	r4, [r3, #28]
+ 485              	.LVL53:
+ 276:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 486              		.loc 1 276 0
+ 487 0008 A37B     		ldrb	r3, [r4, #14]	@ zero_extendqisi2
+ 488 000a 022B     		cmp	r3, #2
+ 489 000c 02D0     		beq	.L37
+ 490 000e 032B     		cmp	r3, #3
+ 491 0010 1BD0     		beq	.L38
+ 492 0012 13BB     		cbnz	r3, .L44
+ 493              	.L37:
+ 281:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 494              		.loc 1 281 0
+ 495 0014 2146     		mov	r1, r4
+ARM GAS  /tmp/ccsOxf3Q.s 			page 20
+
+
+ 496 0016 FFF7FEFF 		bl	USBH_MSC_BOT_REQ_GetMaxLUN
+ 497              	.LVL54:
+ 285:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 498              		.loc 1 285 0
+ 499 001a 0328     		cmp	r0, #3
+ 500 001c 01D1     		bne	.L39
+ 287:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       status = USBH_OK;
+ 501              		.loc 1 287 0
+ 502 001e 0020     		movs	r0, #0
+ 503              	.LVL55:
+ 504 0020 2060     		str	r0, [r4]
+ 505              	.LVL56:
+ 506              	.L39:
+ 291:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 507              		.loc 1 291 0
+ 508 0022 E8B9     		cbnz	r0, .L36
+ 293:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       USBH_UsrLog ("Number of supported LUN: %lu", (int32_t)(MSC_Handle->max_lun));
+ 509              		.loc 1 293 0
+ 510 0024 2578     		ldrb	r5, [r4]	@ zero_extendqisi2
+ 511 0026 0135     		adds	r5, r5, #1
+ 512 0028 2560     		str	r5, [r4]
+ 513              	.LVL57:
+ 296:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       {
+ 514              		.loc 1 296 0
+ 515 002a 0023     		movs	r3, #0
+ 516 002c 0AE0     		b	.L40
+ 517              	.LVL58:
+ 518              	.L41:
+ 298:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         MSC_Handle->unit[i].state_changed = 0;
+ 519              		.loc 1 298 0 discriminator 3
+ 520 002e 3422     		movs	r2, #52
+ 521 0030 02FB0342 		mla	r2, r2, r3, r4
+ 522 0034 0221     		movs	r1, #2
+ 523 0036 82F89210 		strb	r1, [r2, #146]
+ 299:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       }
+ 524              		.loc 1 299 0 discriminator 3
+ 525 003a 0021     		movs	r1, #0
+ 526 003c 82F8C110 		strb	r1, [r2, #193]
+ 296:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       {
+ 527              		.loc 1 296 0 discriminator 3
+ 528 0040 0133     		adds	r3, r3, #1
+ 529              	.LVL59:
+ 530 0042 DBB2     		uxtb	r3, r3
+ 531              	.LVL60:
+ 532              	.L40:
+ 296:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       {
+ 533              		.loc 1 296 0 is_stmt 0 discriminator 1
+ 534 0044 9D42     		cmp	r5, r3
+ 535 0046 F2D8     		bhi	.L41
+ 536 0048 38BD     		pop	{r3, r4, r5, pc}
+ 537              	.LVL61:
+ 538              	.L38:
+ 306:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 539              		.loc 1 306 0 is_stmt 1
+ 540 004a 0021     		movs	r1, #0
+ 541 004c FFF7FEFF 		bl	USBH_ClrFeature
+ 542              	.LVL62:
+ARM GAS  /tmp/ccsOxf3Q.s 			page 21
+
+
+ 543 0050 28B9     		cbnz	r0, .L43
+ 308:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }    
+ 544              		.loc 1 308 0
+ 545 0052 E37B     		ldrb	r3, [r4, #15]	@ zero_extendqisi2
+ 546 0054 A373     		strb	r3, [r4, #14]
+ 272:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   uint8_t i;
+ 547              		.loc 1 272 0
+ 548 0056 0120     		movs	r0, #1
+ 549 0058 38BD     		pop	{r3, r4, r5, pc}
+ 550              	.LVL63:
+ 551              	.L44:
+ 552 005a 0120     		movs	r0, #1
+ 553              	.LVL64:
+ 554 005c 38BD     		pop	{r3, r4, r5, pc}
+ 555              	.LVL65:
+ 556              	.L43:
+ 557 005e 0120     		movs	r0, #1
+ 558              	.LVL66:
+ 559              	.L36:
+ 317:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 560              		.loc 1 317 0
+ 561 0060 38BD     		pop	{r3, r4, r5, pc}
+ 562              		.cfi_endproc
+ 563              	.LFE126:
+ 565 0062 00BF     		.section	.text.USBH_MSC_InterfaceDeInit,"ax",%progbits
+ 566              		.align	2
+ 567              		.thumb
+ 568              		.thumb_func
+ 570              	USBH_MSC_InterfaceDeInit:
+ 571              	.LFB125:
+ 236:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;
+ 572              		.loc 1 236 0
+ 573              		.cfi_startproc
+ 574              		@ args = 0, pretend = 0, frame = 0
+ 575              		@ frame_needed = 0, uses_anonymous_args = 0
+ 576              	.LVL67:
+ 577 0000 38B5     		push	{r3, r4, r5, lr}
+ 578              	.LCFI2:
+ 579              		.cfi_def_cfa_offset 16
+ 580              		.cfi_offset 3, -16
+ 581              		.cfi_offset 4, -12
+ 582              		.cfi_offset 5, -8
+ 583              		.cfi_offset 14, -4
+ 584 0002 0446     		mov	r4, r0
+ 237:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 585              		.loc 1 237 0
+ 586 0004 D0F84435 		ldr	r3, [r0, #1348]
+ 587 0008 DD69     		ldr	r5, [r3, #28]
+ 588              	.LVL68:
+ 239:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 589              		.loc 1 239 0
+ 590 000a 6979     		ldrb	r1, [r5, #5]	@ zero_extendqisi2
+ 591 000c 39B1     		cbz	r1, .L47
+ 241:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_FreePipe  (phost, MSC_Handle->OutPipe);
+ 592              		.loc 1 241 0
+ 593 000e FFF7FEFF 		bl	USBH_ClosePipe
+ 594              	.LVL69:
+ARM GAS  /tmp/ccsOxf3Q.s 			page 22
+
+
+ 242:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->OutPipe = 0;     /* Reset the Channel as Free */
+ 595              		.loc 1 242 0
+ 596 0012 6979     		ldrb	r1, [r5, #5]	@ zero_extendqisi2
+ 597 0014 2046     		mov	r0, r4
+ 598 0016 FFF7FEFF 		bl	USBH_FreePipe
+ 599              	.LVL70:
+ 243:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 600              		.loc 1 243 0
+ 601 001a 0023     		movs	r3, #0
+ 602 001c 6B71     		strb	r3, [r5, #5]
+ 603              	.L47:
+ 246:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 604              		.loc 1 246 0
+ 605 001e 2979     		ldrb	r1, [r5, #4]	@ zero_extendqisi2
+ 606 0020 41B1     		cbz	r1, .L48
+ 248:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_FreePipe  (phost, MSC_Handle->InPipe);
+ 607              		.loc 1 248 0
+ 608 0022 2046     		mov	r0, r4
+ 609 0024 FFF7FEFF 		bl	USBH_ClosePipe
+ 610              	.LVL71:
+ 249:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->InPipe = 0;     /* Reset the Channel as Free */
+ 611              		.loc 1 249 0
+ 612 0028 2979     		ldrb	r1, [r5, #4]	@ zero_extendqisi2
+ 613 002a 2046     		mov	r0, r4
+ 614 002c FFF7FEFF 		bl	USBH_FreePipe
+ 615              	.LVL72:
+ 250:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   } 
+ 616              		.loc 1 250 0
+ 617 0030 0023     		movs	r3, #0
+ 618 0032 2B71     		strb	r3, [r5, #4]
+ 619              	.L48:
+ 253:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 620              		.loc 1 253 0
+ 621 0034 D4F84435 		ldr	r3, [r4, #1348]
+ 622 0038 D869     		ldr	r0, [r3, #28]
+ 623 003a 28B1     		cbz	r0, .L49
+ 255:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     phost->pActiveClass->pData = 0;
+ 624              		.loc 1 255 0
+ 625 003c FFF7FEFF 		bl	free
+ 626              	.LVL73:
+ 256:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 627              		.loc 1 256 0
+ 628 0040 D4F84435 		ldr	r3, [r4, #1348]
+ 629 0044 0022     		movs	r2, #0
+ 630 0046 DA61     		str	r2, [r3, #28]
+ 631              	.L49:
+ 260:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 632              		.loc 1 260 0
+ 633 0048 0020     		movs	r0, #0
+ 634 004a 38BD     		pop	{r3, r4, r5, pc}
+ 635              		.cfi_endproc
+ 636              	.LFE125:
+ 638              		.section	.text.USBH_MSC_InterfaceInit,"ax",%progbits
+ 639              		.align	2
+ 640              		.thumb
+ 641              		.thumb_func
+ 643              	USBH_MSC_InterfaceInit:
+ARM GAS  /tmp/ccsOxf3Q.s 			page 23
+
+
+ 644              	.LFB124:
+ 150:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   uint8_t interface = 0; 
+ 645              		.loc 1 150 0
+ 646              		.cfi_startproc
+ 647              		@ args = 0, pretend = 0, frame = 0
+ 648              		@ frame_needed = 0, uses_anonymous_args = 0
+ 649              	.LVL74:
+ 650 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 651              	.LCFI3:
+ 652              		.cfi_def_cfa_offset 20
+ 653              		.cfi_offset 4, -20
+ 654              		.cfi_offset 5, -16
+ 655              		.cfi_offset 6, -12
+ 656              		.cfi_offset 7, -8
+ 657              		.cfi_offset 14, -4
+ 658 0002 85B0     		sub	sp, sp, #20
+ 659              	.LCFI4:
+ 660              		.cfi_def_cfa_offset 40
+ 661 0004 0446     		mov	r4, r0
+ 662              	.LVL75:
+ 155:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 663              		.loc 1 155 0
+ 664 0006 D0F84415 		ldr	r1, [r0, #1348]
+ 665 000a 5023     		movs	r3, #80
+ 666 000c 0622     		movs	r2, #6
+ 667 000e 0979     		ldrb	r1, [r1, #4]	@ zero_extendqisi2
+ 668 0010 FFF7FEFF 		bl	USBH_FindInterface
+ 669              	.LVL76:
+ 157:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 670              		.loc 1 157 0
+ 671 0014 FF28     		cmp	r0, #255
+ 672 0016 00F08880 		beq	.L57
+ 164:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 673              		.loc 1 164 0
+ 674 001a 0146     		mov	r1, r0
+ 675 001c 2046     		mov	r0, r4
+ 676              	.LVL77:
+ 677 001e FFF7FEFF 		bl	USBH_SelectInterface
+ 678              	.LVL78:
+ 166:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;
+ 679              		.loc 1 166 0
+ 680 0022 D4F84455 		ldr	r5, [r4, #1348]
+ 681 0026 4FF48070 		mov	r0, #256
+ 682 002a FFF7FEFF 		bl	malloc
+ 683              	.LVL79:
+ 684 002e E861     		str	r0, [r5, #28]
+ 167:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 685              		.loc 1 167 0
+ 686 0030 D4F84435 		ldr	r3, [r4, #1348]
+ 687 0034 DD69     		ldr	r5, [r3, #28]
+ 688              	.LVL80:
+ 169:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 689              		.loc 1 169 0
+ 690 0036 94F81F33 		ldrb	r3, [r4, #799]	@ zero_extendqisi2
+ 691 003a 3222     		movs	r2, #50
+ 692 003c 02FB0343 		mla	r3, r2, r3, r4
+ 693 0040 93F84833 		ldrb	r3, [r3, #840]	@ zero_extendqisi2
+ARM GAS  /tmp/ccsOxf3Q.s 			page 24
+
+
+ 694 0044 13F0800F 		tst	r3, #128
+ 695 0048 08D0     		beq	.L53
+ 171:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->InEpSize  = phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_De
+ 696              		.loc 1 171 0
+ 697 004a EB71     		strb	r3, [r5, #7]
+ 172:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 698              		.loc 1 172 0
+ 699 004c 94F81F33 		ldrb	r3, [r4, #799]	@ zero_extendqisi2
+ 700 0050 02FB0343 		mla	r3, r2, r3, r4
+ 701 0054 B3F84A33 		ldrh	r3, [r3, #842]
+ 702 0058 6B81     		strh	r3, [r5, #10]	@ movhi
+ 703 005a 08E0     		b	.L54
+ 704              	.L53:
+ 176:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->OutEpSize  = phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_D
+ 705              		.loc 1 176 0
+ 706 005c AB71     		strb	r3, [r5, #6]
+ 177:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 707              		.loc 1 177 0
+ 708 005e 94F81F33 		ldrb	r3, [r4, #799]	@ zero_extendqisi2
+ 709 0062 3222     		movs	r2, #50
+ 710 0064 02FB0343 		mla	r3, r2, r3, r4
+ 711 0068 B3F84A33 		ldrh	r3, [r3, #842]
+ 712 006c 2B81     		strh	r3, [r5, #8]	@ movhi
+ 713              	.L54:
+ 180:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 714              		.loc 1 180 0
+ 715 006e 94F81F33 		ldrb	r3, [r4, #799]	@ zero_extendqisi2
+ 716 0072 3222     		movs	r2, #50
+ 717 0074 02FB0343 		mla	r3, r2, r3, r4
+ 718 0078 93F85033 		ldrb	r3, [r3, #848]	@ zero_extendqisi2
+ 719 007c 13F0800F 		tst	r3, #128
+ 720 0080 08D0     		beq	.L55
+ 182:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->InEpSize  = phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_De
+ 721              		.loc 1 182 0
+ 722 0082 EB71     		strb	r3, [r5, #7]
+ 183:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 723              		.loc 1 183 0
+ 724 0084 94F81F33 		ldrb	r3, [r4, #799]	@ zero_extendqisi2
+ 725 0088 02FB0343 		mla	r3, r2, r3, r4
+ 726 008c B3F85233 		ldrh	r3, [r3, #850]
+ 727 0090 6B81     		strh	r3, [r5, #10]	@ movhi
+ 728 0092 08E0     		b	.L56
+ 729              	.L55:
+ 187:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->OutEpSize  = phost->device.CfgDesc.Itf_Desc[phost->device.current_interface].Ep_D
+ 730              		.loc 1 187 0
+ 731 0094 AB71     		strb	r3, [r5, #6]
+ 188:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 732              		.loc 1 188 0
+ 733 0096 94F81F33 		ldrb	r3, [r4, #799]	@ zero_extendqisi2
+ 734 009a 3222     		movs	r2, #50
+ 735 009c 02FB0343 		mla	r3, r2, r3, r4
+ 736 00a0 B3F85233 		ldrh	r3, [r3, #850]
+ 737 00a4 2B81     		strh	r3, [r5, #8]	@ movhi
+ 738              	.L56:
+ 191:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->rw_lun = 0;
+ 739              		.loc 1 191 0
+ 740 00a6 0026     		movs	r6, #0
+ARM GAS  /tmp/ccsOxf3Q.s 			page 25
+
+
+ 741 00a8 A5F8F860 		strh	r6, [r5, #248]	@ movhi
+ 192:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->state = MSC_INIT;
+ 742              		.loc 1 192 0
+ 743 00ac A5F8FA60 		strh	r6, [r5, #250]	@ movhi
+ 193:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->error = MSC_OK;
+ 744              		.loc 1 193 0
+ 745 00b0 2E73     		strb	r6, [r5, #12]
+ 194:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->req_state = MSC_REQ_IDLE;
+ 746              		.loc 1 194 0
+ 747 00b2 6E73     		strb	r6, [r5, #13]
+ 195:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->OutPipe = USBH_AllocPipe(phost, MSC_Handle->OutEp);
+ 748              		.loc 1 195 0
+ 749 00b4 AE73     		strb	r6, [r5, #14]
+ 196:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_Handle->InPipe = USBH_AllocPipe(phost, MSC_Handle->InEp);
+ 750              		.loc 1 196 0
+ 751 00b6 A979     		ldrb	r1, [r5, #6]	@ zero_extendqisi2
+ 752 00b8 2046     		mov	r0, r4
+ 753 00ba FFF7FEFF 		bl	USBH_AllocPipe
+ 754              	.LVL81:
+ 755 00be 6871     		strb	r0, [r5, #5]
+ 197:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 756              		.loc 1 197 0
+ 757 00c0 E979     		ldrb	r1, [r5, #7]	@ zero_extendqisi2
+ 758 00c2 2046     		mov	r0, r4
+ 759 00c4 FFF7FEFF 		bl	USBH_AllocPipe
+ 760              	.LVL82:
+ 761 00c8 2871     		strb	r0, [r5, #4]
+ 199:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 762              		.loc 1 199 0
+ 763 00ca 2046     		mov	r0, r4
+ 764 00cc FFF7FEFF 		bl	USBH_MSC_BOT_Init
+ 765              	.LVL83:
+ 202:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 766              		.loc 1 202 0
+ 767 00d0 6822     		movs	r2, #104
+ 768 00d2 3146     		mov	r1, r6
+ 769 00d4 05F19000 		add	r0, r5, #144
+ 770 00d8 FFF7FEFF 		bl	memset
+ 771              	.LVL84:
+ 205:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     MSC_Handle->OutPipe,
+ 772              		.loc 1 205 0
+ 773 00dc 94F81C33 		ldrb	r3, [r4, #796]	@ zero_extendqisi2
+ 774 00e0 AA79     		ldrb	r2, [r5, #6]	@ zero_extendqisi2
+ 775 00e2 6979     		ldrb	r1, [r5, #5]	@ zero_extendqisi2
+ 776 00e4 2889     		ldrh	r0, [r5, #8]
+ 777 00e6 0290     		str	r0, [sp, #8]
+ 778 00e8 0227     		movs	r7, #2
+ 779 00ea 0197     		str	r7, [sp, #4]
+ 780 00ec 94F81D03 		ldrb	r0, [r4, #797]	@ zero_extendqisi2
+ 781 00f0 0090     		str	r0, [sp]
+ 782 00f2 2046     		mov	r0, r4
+ 783 00f4 FFF7FEFF 		bl	USBH_OpenPipe
+ 784              	.LVL85:
+ 213:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                     MSC_Handle->InPipe,
+ 785              		.loc 1 213 0
+ 786 00f8 94F81C33 		ldrb	r3, [r4, #796]	@ zero_extendqisi2
+ 787 00fc EA79     		ldrb	r2, [r5, #7]	@ zero_extendqisi2
+ARM GAS  /tmp/ccsOxf3Q.s 			page 26
+
+
+ 788 00fe 2979     		ldrb	r1, [r5, #4]	@ zero_extendqisi2
+ 789 0100 6889     		ldrh	r0, [r5, #10]
+ 790 0102 0290     		str	r0, [sp, #8]
+ 791 0104 0197     		str	r7, [sp, #4]
+ 792 0106 94F81D03 		ldrb	r0, [r4, #797]	@ zero_extendqisi2
+ 793 010a 0090     		str	r0, [sp]
+ 794 010c 2046     		mov	r0, r4
+ 795 010e FFF7FEFF 		bl	USBH_OpenPipe
+ 796              	.LVL86:
+ 222:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_LL_SetToggle  (phost, MSC_Handle->OutPipe,0);
+ 797              		.loc 1 222 0
+ 798 0112 3246     		mov	r2, r6
+ 799 0114 2979     		ldrb	r1, [r5, #4]	@ zero_extendqisi2
+ 800 0116 2046     		mov	r0, r4
+ 801 0118 FFF7FEFF 		bl	USBH_LL_SetToggle
+ 802              	.LVL87:
+ 223:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     status = USBH_OK; 
+ 803              		.loc 1 223 0
+ 804 011c 3246     		mov	r2, r6
+ 805 011e 6979     		ldrb	r1, [r5, #5]	@ zero_extendqisi2
+ 806 0120 2046     		mov	r0, r4
+ 807 0122 FFF7FEFF 		bl	USBH_LL_SetToggle
+ 808              	.LVL88:
+ 224:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 809              		.loc 1 224 0
+ 810 0126 3046     		mov	r0, r6
+ 811 0128 00E0     		b	.L52
+ 812              	.LVL89:
+ 813              	.L57:
+ 160:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 814              		.loc 1 160 0
+ 815 012a 0220     		movs	r0, #2
+ 816              	.LVL90:
+ 817              	.L52:
+ 227:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 818              		.loc 1 227 0
+ 819 012c 05B0     		add	sp, sp, #20
+ 820              	.LCFI5:
+ 821              		.cfi_def_cfa_offset 20
+ 822              		@ sp needed
+ 823 012e F0BD     		pop	{r4, r5, r6, r7, pc}
+ 824              		.cfi_endproc
+ 825              	.LFE124:
+ 827              		.section	.text.USBH_MSC_RdWrProcess,"ax",%progbits
+ 828              		.align	2
+ 829              		.thumb
+ 830              		.thumb_func
+ 832              	USBH_MSC_RdWrProcess:
+ 833              	.LFB129:
+ 516:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 517:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_RdWrProcess 
+ 518:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function is for managing state machine for MSC I/O Process
+ 519:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 520:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  lun: logical Unit Number
+ 521:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 522:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 523:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** static USBH_StatusTypeDef USBH_MSC_RdWrProcess(USBH_HandleTypeDef *phost, uint8_t lun)
+ARM GAS  /tmp/ccsOxf3Q.s 			page 27
+
+
+ 524:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 834              		.loc 1 524 0
+ 835              		.cfi_startproc
+ 836              		@ args = 0, pretend = 0, frame = 0
+ 837              		@ frame_needed = 0, uses_anonymous_args = 0
+ 838              	.LVL91:
+ 839 0000 30B5     		push	{r4, r5, lr}
+ 840              	.LCFI6:
+ 841              		.cfi_def_cfa_offset 12
+ 842              		.cfi_offset 4, -12
+ 843              		.cfi_offset 5, -8
+ 844              		.cfi_offset 14, -4
+ 845 0002 83B0     		sub	sp, sp, #12
+ 846              	.LCFI7:
+ 847              		.cfi_def_cfa_offset 24
+ 848 0004 0C46     		mov	r4, r1
+ 525:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;
+ 849              		.loc 1 525 0
+ 850 0006 D0F84435 		ldr	r3, [r0, #1348]
+ 851 000a DD69     		ldr	r5, [r3, #28]
+ 852              	.LVL92:
+ 526:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef error = USBH_BUSY ;
+ 527:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 528:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 529:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   /* Switch MSC REQ state machine */
+ 530:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   switch (MSC_Handle->unit[lun].state)
+ 853              		.loc 1 530 0
+ 854 000c 3423     		movs	r3, #52
+ 855 000e 03FB0153 		mla	r3, r3, r1, r5
+ 856 0012 93F89030 		ldrb	r3, [r3, #144]	@ zero_extendqisi2
+ 857 0016 062B     		cmp	r3, #6
+ 858 0018 04D0     		beq	.L61
+ 859 001a 072B     		cmp	r3, #7
+ 860 001c 23D0     		beq	.L62
+ 861 001e 052B     		cmp	r3, #5
+ 862 0020 63D1     		bne	.L73
+ 863 0022 41E0     		b	.L63
+ 864              	.L61:
+ 531:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 532:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****  
+ 533:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   case MSC_READ: 
+ 534:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     scsi_status = USBH_MSC_SCSI_Read(phost,lun, 0, NULL, 0) ;
+ 865              		.loc 1 534 0
+ 866 0024 0022     		movs	r2, #0
+ 867 0026 0092     		str	r2, [sp]
+ 868 0028 1346     		mov	r3, r2
+ 869 002a FFF7FEFF 		bl	USBH_MSC_SCSI_Read
+ 870              	.LVL93:
+ 535:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 536:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(scsi_status == USBH_OK)
+ 871              		.loc 1 536 0
+ 872 002e 30B9     		cbnz	r0, .L64
+ 537:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 538:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[lun].state = MSC_IDLE;
+ 873              		.loc 1 538 0
+ 874 0030 3423     		movs	r3, #52
+ 875 0032 03FB0454 		mla	r4, r3, r4, r5
+ARM GAS  /tmp/ccsOxf3Q.s 			page 28
+
+
+ 876 0036 0123     		movs	r3, #1
+ 877 0038 84F89030 		strb	r3, [r4, #144]
+ 878              	.LVL94:
+ 879 003c 5AE0     		b	.L60
+ 880              	.LVL95:
+ 881              	.L64:
+ 539:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       error = USBH_OK;     
+ 540:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 541:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     else if( scsi_status == USBH_FAIL)
+ 882              		.loc 1 541 0
+ 883 003e 0228     		cmp	r0, #2
+ 884 0040 07D1     		bne	.L65
+ 542:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 543:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[lun].state = MSC_REQUEST_SENSE;  
+ 885              		.loc 1 543 0
+ 886 0042 3423     		movs	r3, #52
+ 887 0044 03FB0454 		mla	r4, r3, r4, r5
+ 888 0048 0523     		movs	r3, #5
+ 889 004a 84F89030 		strb	r3, [r4, #144]
+ 526:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 890              		.loc 1 526 0
+ 891 004e 0120     		movs	r0, #1
+ 892              	.LVL96:
+ 893 0050 50E0     		b	.L60
+ 894              	.LVL97:
+ 895              	.L65:
+ 544:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 545:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     else if(scsi_status == USBH_UNRECOVERED_ERROR)
+ 896              		.loc 1 545 0
+ 897 0052 0428     		cmp	r0, #4
+ 898 0054 4BD1     		bne	.L70
+ 546:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 547:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[lun].state = MSC_UNRECOVERED_ERROR;
+ 899              		.loc 1 547 0
+ 900 0056 3423     		movs	r3, #52
+ 901 0058 03FB0454 		mla	r4, r3, r4, r5
+ 902 005c 0823     		movs	r3, #8
+ 903 005e 84F89030 		strb	r3, [r4, #144]
+ 904              	.LVL98:
+ 548:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           error = USBH_FAIL;
+ 905              		.loc 1 548 0
+ 906 0062 0220     		movs	r0, #2
+ 907              	.LVL99:
+ 908 0064 46E0     		b	.L60
+ 909              	.LVL100:
+ 910              	.L62:
+ 549:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 550:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #if (USBH_USE_OS == 1)
+ 551:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     osMessagePut ( phost->os_event, USBH_CLASS_EVENT, 0);
+ 552:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #endif   
+ 553:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;     
+ 554:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 555:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   case MSC_WRITE: 
+ 556:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     scsi_status = USBH_MSC_SCSI_Write(phost,lun, 0, NULL, 0) ;
+ 911              		.loc 1 556 0
+ 912 0066 0022     		movs	r2, #0
+ 913 0068 0092     		str	r2, [sp]
+ARM GAS  /tmp/ccsOxf3Q.s 			page 29
+
+
+ 914 006a 1346     		mov	r3, r2
+ 915 006c FFF7FEFF 		bl	USBH_MSC_SCSI_Write
+ 916              	.LVL101:
+ 557:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 558:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(scsi_status == USBH_OK)
+ 917              		.loc 1 558 0
+ 918 0070 30B9     		cbnz	r0, .L66
+ 559:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 560:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         MSC_Handle->unit[lun].state = MSC_IDLE;
+ 919              		.loc 1 560 0
+ 920 0072 3423     		movs	r3, #52
+ 921 0074 03FB0454 		mla	r4, r3, r4, r5
+ 922 0078 0123     		movs	r3, #1
+ 923 007a 84F89030 		strb	r3, [r4, #144]
+ 924              	.LVL102:
+ 925 007e 39E0     		b	.L60
+ 926              	.LVL103:
+ 927              	.L66:
+ 561:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****         error = USBH_OK;             
+ 562:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 563:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     else if( scsi_status == USBH_FAIL)
+ 928              		.loc 1 563 0
+ 929 0080 0228     		cmp	r0, #2
+ 930 0082 07D1     		bne	.L67
+ 564:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 565:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[lun].state = MSC_REQUEST_SENSE;  
+ 931              		.loc 1 565 0
+ 932 0084 3423     		movs	r3, #52
+ 933 0086 03FB0454 		mla	r4, r3, r4, r5
+ 934 008a 0523     		movs	r3, #5
+ 935 008c 84F89030 		strb	r3, [r4, #144]
+ 526:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 936              		.loc 1 526 0
+ 937 0090 0120     		movs	r0, #1
+ 938              	.LVL104:
+ 939 0092 2FE0     		b	.L60
+ 940              	.LVL105:
+ 941              	.L67:
+ 566:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 567:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     else if(scsi_status == USBH_UNRECOVERED_ERROR)
+ 942              		.loc 1 567 0
+ 943 0094 0428     		cmp	r0, #4
+ 944 0096 2CD1     		bne	.L71
+ 568:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 569:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[lun].state = MSC_UNRECOVERED_ERROR;
+ 945              		.loc 1 569 0
+ 946 0098 3423     		movs	r3, #52
+ 947 009a 03FB0454 		mla	r4, r3, r4, r5
+ 948 009e 0823     		movs	r3, #8
+ 949 00a0 84F89030 		strb	r3, [r4, #144]
+ 950              	.LVL106:
+ 570:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           error = USBH_FAIL;
+ 951              		.loc 1 570 0
+ 952 00a4 0220     		movs	r0, #2
+ 953              	.LVL107:
+ 954 00a6 25E0     		b	.L60
+ 955              	.LVL108:
+ARM GAS  /tmp/ccsOxf3Q.s 			page 30
+
+
+ 956              	.L63:
+ 571:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 572:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #if (USBH_USE_OS == 1)
+ 573:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     osMessagePut ( phost->os_event, USBH_CLASS_EVENT, 0);
+ 574:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #endif       
+ 575:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break; 
+ 576:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 577:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   case MSC_REQUEST_SENSE:
+ 578:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     scsi_status = USBH_MSC_SCSI_RequestSense(phost, lun, &MSC_Handle->unit[lun].sense);
+ 957              		.loc 1 578 0
+ 958 00a8 3422     		movs	r2, #52
+ 959 00aa 02FB01F2 		mul	r2, r2, r1
+ 960 00ae 9832     		adds	r2, r2, #152
+ 961 00b0 2A44     		add	r2, r2, r5
+ 962 00b2 0432     		adds	r2, r2, #4
+ 963 00b4 FFF7FEFF 		bl	USBH_MSC_SCSI_RequestSense
+ 964              	.LVL109:
+ 579:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 580:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if( scsi_status == USBH_OK)
+ 965              		.loc 1 580 0
+ 966 00b8 0346     		mov	r3, r0
+ 967 00ba 48B9     		cbnz	r0, .L72
+ 581:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 582:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       USBH_UsrLog ("Sense Key  : %x", MSC_Handle->unit[lun].sense.key);
+ 583:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       USBH_UsrLog ("Additional Sense Code : %x", MSC_Handle->unit[lun].sense.asc);
+ 584:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       USBH_UsrLog ("Additional Sense Code Qualifier: %x", MSC_Handle->unit[lun].sense.ascq);
+ 585:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[lun].state = MSC_IDLE;
+ 968              		.loc 1 585 0
+ 969 00bc 3422     		movs	r2, #52
+ 970 00be 02FB0452 		mla	r2, r2, r4, r5
+ 971 00c2 0121     		movs	r1, #1
+ 972 00c4 82F89010 		strb	r1, [r2, #144]
+ 586:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[lun].error = MSC_ERROR;
+ 973              		.loc 1 586 0
+ 974 00c8 0220     		movs	r0, #2
+ 975              	.LVL110:
+ 976 00ca 82F89100 		strb	r0, [r2, #145]
+ 977              	.LVL111:
+ 978 00ce 00E0     		b	.L68
+ 979              	.LVL112:
+ 980              	.L72:
+ 526:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 981              		.loc 1 526 0
+ 982 00d0 0120     		movs	r0, #1
+ 983              	.LVL113:
+ 984              	.L68:
+ 587:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       
+ 588:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       error = USBH_FAIL;
+ 589:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 590:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if( scsi_status == USBH_FAIL)
+ 985              		.loc 1 590 0
+ 986 00d2 022B     		cmp	r3, #2
+ 987 00d4 0ED0     		beq	.L60
+ 591:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 592:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       USBH_UsrLog ("MSC Device NOT ready");
+ 593:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 594:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     else if(scsi_status == USBH_UNRECOVERED_ERROR)
+ARM GAS  /tmp/ccsOxf3Q.s 			page 31
+
+
+ 988              		.loc 1 594 0
+ 989 00d6 042B     		cmp	r3, #4
+ 990 00d8 0CD1     		bne	.L60
+ 595:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 596:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->unit[lun].state = MSC_UNRECOVERED_ERROR;  
+ 991              		.loc 1 596 0
+ 992 00da 3423     		movs	r3, #52
+ 993 00dc 03FB0454 		mla	r4, r3, r4, r5
+ 994 00e0 0823     		movs	r3, #8
+ 995 00e2 84F89030 		strb	r3, [r4, #144]
+ 996              	.LVL114:
+ 597:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****           error = USBH_FAIL;
+ 997              		.loc 1 597 0
+ 998 00e6 0220     		movs	r0, #2
+ 999 00e8 04E0     		b	.L60
+ 1000              	.LVL115:
+ 1001              	.L73:
+ 526:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_StatusTypeDef scsi_status = USBH_BUSY ;  
+ 1002              		.loc 1 526 0
+ 1003 00ea 0120     		movs	r0, #1
+ 1004              	.LVL116:
+ 1005 00ec 02E0     		b	.L60
+ 1006              	.LVL117:
+ 1007              	.L70:
+ 1008 00ee 0120     		movs	r0, #1
+ 1009              	.LVL118:
+ 1010 00f0 00E0     		b	.L60
+ 1011              	.LVL119:
+ 1012              	.L71:
+ 1013 00f2 0120     		movs	r0, #1
+ 1014              	.LVL120:
+ 1015              	.L60:
+ 598:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 599:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #if (USBH_USE_OS == 1)
+ 600:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     osMessagePut ( phost->os_event, USBH_CLASS_EVENT, 0);
+ 601:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** #endif       
+ 602:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;  
+ 603:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 604:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   default:
+ 605:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     break;  
+ 606:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 607:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 608:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return error;
+ 609:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 1016              		.loc 1 609 0
+ 1017 00f4 03B0     		add	sp, sp, #12
+ 1018              	.LCFI8:
+ 1019              		.cfi_def_cfa_offset 12
+ 1020              		@ sp needed
+ 1021 00f6 30BD     		pop	{r4, r5, pc}
+ 1022              		.cfi_endproc
+ 1023              	.LFE129:
+ 1025              		.section	.text.USBH_MSC_IsReady,"ax",%progbits
+ 1026              		.align	2
+ 1027              		.global	USBH_MSC_IsReady
+ 1028              		.thumb
+ 1029              		.thumb_func
+ARM GAS  /tmp/ccsOxf3Q.s 			page 32
+
+
+ 1031              	USBH_MSC_IsReady:
+ 1032              	.LFB130:
+ 610:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 611:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 612:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_IsReady 
+ 613:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function check if the MSC function is ready
+ 614:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 615:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 616:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 617:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** uint8_t  USBH_MSC_IsReady (USBH_HandleTypeDef *phost)
+ 618:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 1033              		.loc 1 618 0
+ 1034              		.cfi_startproc
+ 1035              		@ args = 0, pretend = 0, frame = 0
+ 1036              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1037              		@ link register save eliminated.
+ 1038              	.LVL121:
+ 619:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;  
+ 1039              		.loc 1 619 0
+ 1040 0000 D0F84435 		ldr	r3, [r0, #1348]
+ 1041 0004 DA69     		ldr	r2, [r3, #28]
+ 1042              	.LVL122:
+ 620:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     
+ 621:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if(phost->gState == HOST_CLASS)
+ 1043              		.loc 1 621 0
+ 1044 0006 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 1045 0008 DBB2     		uxtb	r3, r3
+ 1046 000a 0A2B     		cmp	r3, #10
+ 1047 000c 05D1     		bne	.L77
+ 622:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 623:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return (MSC_Handle->state == MSC_IDLE);
+ 1048              		.loc 1 623 0
+ 1049 000e 107B     		ldrb	r0, [r2, #12]	@ zero_extendqisi2
+ 1050              	.LVL123:
+ 1051 0010 0128     		cmp	r0, #1
+ 1052 0012 14BF     		ite	ne
+ 1053 0014 0020     		movne	r0, #0
+ 1054 0016 0120     		moveq	r0, #1
+ 1055 0018 7047     		bx	lr
+ 1056              	.LVL124:
+ 1057              	.L77:
+ 624:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 625:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   else
+ 626:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 627:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return 0;
+ 1058              		.loc 1 627 0
+ 1059 001a 0020     		movs	r0, #0
+ 1060              	.LVL125:
+ 628:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 629:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 1061              		.loc 1 629 0
+ 1062 001c 7047     		bx	lr
+ 1063              		.cfi_endproc
+ 1064              	.LFE130:
+ 1066 001e 00BF     		.section	.text.USBH_MSC_GetMaxLUN,"ax",%progbits
+ 1067              		.align	2
+ 1068              		.global	USBH_MSC_GetMaxLUN
+ARM GAS  /tmp/ccsOxf3Q.s 			page 33
+
+
+ 1069              		.thumb
+ 1070              		.thumb_func
+ 1072              	USBH_MSC_GetMaxLUN:
+ 1073              	.LFB131:
+ 630:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 631:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 632:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_GetMaxLUN 
+ 633:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function return the Max LUN supported
+ 634:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 635:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval logical Unit Number supported
+ 636:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 637:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** int8_t  USBH_MSC_GetMaxLUN (USBH_HandleTypeDef *phost)
+ 638:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 1074              		.loc 1 638 0
+ 1075              		.cfi_startproc
+ 1076              		@ args = 0, pretend = 0, frame = 0
+ 1077              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1078              		@ link register save eliminated.
+ 1079              	.LVL126:
+ 639:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;    
+ 1080              		.loc 1 639 0
+ 1081 0000 D0F84435 		ldr	r3, [r0, #1348]
+ 1082 0004 DA69     		ldr	r2, [r3, #28]
+ 1083              	.LVL127:
+ 640:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 641:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if ((phost->gState == HOST_CLASS) && (MSC_Handle->state == MSC_IDLE))
+ 1084              		.loc 1 641 0
+ 1085 0006 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 1086 0008 DBB2     		uxtb	r3, r3
+ 1087 000a 0A2B     		cmp	r3, #10
+ 1088 000c 05D1     		bne	.L80
+ 1089              		.loc 1 641 0 is_stmt 0 discriminator 1
+ 1090 000e 137B     		ldrb	r3, [r2, #12]	@ zero_extendqisi2
+ 1091 0010 012B     		cmp	r3, #1
+ 1092 0012 05D1     		bne	.L81
+ 642:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 643:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return  MSC_Handle->max_lun;
+ 1093              		.loc 1 643 0 is_stmt 1
+ 1094 0014 92F90000 		ldrsb	r0, [r2]
+ 1095              	.LVL128:
+ 1096 0018 7047     		bx	lr
+ 1097              	.LVL129:
+ 1098              	.L80:
+ 644:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }  
+ 645:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return 0xFF;
+ 1099              		.loc 1 645 0
+ 1100 001a 4FF0FF30 		mov	r0, #-1
+ 1101              	.LVL130:
+ 1102 001e 7047     		bx	lr
+ 1103              	.LVL131:
+ 1104              	.L81:
+ 1105 0020 4FF0FF30 		mov	r0, #-1
+ 1106              	.LVL132:
+ 646:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 1107              		.loc 1 646 0
+ 1108 0024 7047     		bx	lr
+ 1109              		.cfi_endproc
+ARM GAS  /tmp/ccsOxf3Q.s 			page 34
+
+
+ 1110              	.LFE131:
+ 1112 0026 00BF     		.section	.text.USBH_MSC_UnitIsReady,"ax",%progbits
+ 1113              		.align	2
+ 1114              		.global	USBH_MSC_UnitIsReady
+ 1115              		.thumb
+ 1116              		.thumb_func
+ 1118              	USBH_MSC_UnitIsReady:
+ 1119              	.LFB132:
+ 647:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 648:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 649:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_UnitIsReady 
+ 650:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function check whether a LUN is ready
+ 651:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 652:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  lun: logical Unit Number
+ 653:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval Lun status (0: not ready / 1: ready)
+ 654:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 655:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** uint8_t  USBH_MSC_UnitIsReady (USBH_HandleTypeDef *phost, uint8_t lun)
+ 656:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 1120              		.loc 1 656 0
+ 1121              		.cfi_startproc
+ 1122              		@ args = 0, pretend = 0, frame = 0
+ 1123              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1124              		@ link register save eliminated.
+ 1125              	.LVL133:
+ 657:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;  
+ 1126              		.loc 1 657 0
+ 1127 0000 D0F84435 		ldr	r3, [r0, #1348]
+ 1128 0004 DA69     		ldr	r2, [r3, #28]
+ 1129              	.LVL134:
+ 658:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 659:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if(phost->gState == HOST_CLASS)
+ 1130              		.loc 1 659 0
+ 1131 0006 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 1132 0008 DBB2     		uxtb	r3, r3
+ 1133 000a 0A2B     		cmp	r3, #10
+ 1134 000c 08D1     		bne	.L84
+ 660:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 661:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return (MSC_Handle->unit[lun].error == MSC_OK);
+ 1135              		.loc 1 661 0
+ 1136 000e 3423     		movs	r3, #52
+ 1137 0010 03FB0121 		mla	r1, r3, r1, r2
+ 1138              	.LVL135:
+ 1139 0014 91F89100 		ldrb	r0, [r1, #145]	@ zero_extendqisi2
+ 1140              	.LVL136:
+ 1141 0018 B0FA80F0 		clz	r0, r0
+ 1142 001c 4009     		lsrs	r0, r0, #5
+ 1143 001e 7047     		bx	lr
+ 1144              	.LVL137:
+ 1145              	.L84:
+ 662:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 663:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   else
+ 664:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 665:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return 0;
+ 1146              		.loc 1 665 0
+ 1147 0020 0020     		movs	r0, #0
+ 1148              	.LVL138:
+ 666:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ARM GAS  /tmp/ccsOxf3Q.s 			page 35
+
+
+ 667:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 1149              		.loc 1 667 0
+ 1150 0022 7047     		bx	lr
+ 1151              		.cfi_endproc
+ 1152              	.LFE132:
+ 1154              		.section	.text.USBH_MSC_GetLUNInfo,"ax",%progbits
+ 1155              		.align	2
+ 1156              		.global	USBH_MSC_GetLUNInfo
+ 1157              		.thumb
+ 1158              		.thumb_func
+ 1160              	USBH_MSC_GetLUNInfo:
+ 1161              	.LFB133:
+ 668:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       
+ 669:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 670:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_GetLUNInfo 
+ 671:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function return a LUN information
+ 672:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 673:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  lun: logical Unit Number
+ 674:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 675:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 676:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** USBH_StatusTypeDef USBH_MSC_GetLUNInfo(USBH_HandleTypeDef *phost, uint8_t lun, MSC_LUNTypeDef *info
+ 677:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 1162              		.loc 1 677 0
+ 1163              		.cfi_startproc
+ 1164              		@ args = 0, pretend = 0, frame = 0
+ 1165              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1166              		@ link register save eliminated.
+ 1167              	.LVL139:
+ 1168 0000 70B4     		push	{r4, r5, r6}
+ 1169              	.LCFI9:
+ 1170              		.cfi_def_cfa_offset 12
+ 1171              		.cfi_offset 4, -12
+ 1172              		.cfi_offset 5, -8
+ 1173              		.cfi_offset 6, -4
+ 678:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;    
+ 1174              		.loc 1 678 0
+ 1175 0002 D0F84435 		ldr	r3, [r0, #1348]
+ 1176 0006 DC69     		ldr	r4, [r3, #28]
+ 1177              	.LVL140:
+ 679:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if(phost->gState == HOST_CLASS)
+ 1178              		.loc 1 679 0
+ 1179 0008 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 1180 000a DBB2     		uxtb	r3, r3
+ 1181 000c 0A2B     		cmp	r3, #10
+ 1182 000e 16D1     		bne	.L88
+ 680:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 681:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     USBH_memcpy(info,&MSC_Handle->unit[lun], sizeof(MSC_LUNTypeDef));
+ 1183              		.loc 1 681 0
+ 1184 0010 3420     		movs	r0, #52
+ 1185              	.LVL141:
+ 1186 0012 00FB01F1 		mul	r1, r0, r1
+ 1187              	.LVL142:
+ 1188 0016 9031     		adds	r1, r1, #144
+ 1189 0018 6318     		adds	r3, r4, r1
+ 1190 001a 03F13001 		add	r1, r3, #48
+ 1191              	.LVL143:
+ 1192              	.L87:
+ARM GAS  /tmp/ccsOxf3Q.s 			page 36
+
+
+ 1193 001e 1E68     		ldr	r6, [r3]	@ unaligned
+ 1194 0020 5D68     		ldr	r5, [r3, #4]	@ unaligned
+ 1195 0022 9C68     		ldr	r4, [r3, #8]	@ unaligned
+ 1196 0024 D868     		ldr	r0, [r3, #12]	@ unaligned
+ 1197 0026 1660     		str	r6, [r2]	@ unaligned
+ 1198 0028 5560     		str	r5, [r2, #4]	@ unaligned
+ 1199 002a 9460     		str	r4, [r2, #8]	@ unaligned
+ 1200 002c D060     		str	r0, [r2, #12]	@ unaligned
+ 1201 002e 1033     		adds	r3, r3, #16
+ 1202 0030 1032     		adds	r2, r2, #16
+ 1203 0032 8B42     		cmp	r3, r1
+ 1204 0034 F3D1     		bne	.L87
+ 1205 0036 1B68     		ldr	r3, [r3]	@ unaligned
+ 1206 0038 1360     		str	r3, [r2]	@ unaligned
+ 682:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return USBH_OK;
+ 1207              		.loc 1 682 0
+ 1208 003a 0020     		movs	r0, #0
+ 1209 003c 00E0     		b	.L86
+ 1210              	.LVL144:
+ 1211              	.L88:
+ 683:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 684:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   else
+ 685:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 686:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return USBH_FAIL;
+ 1212              		.loc 1 686 0
+ 1213 003e 0220     		movs	r0, #2
+ 1214              	.LVL145:
+ 1215              	.L86:
+ 687:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 688:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 1216              		.loc 1 688 0
+ 1217 0040 70BC     		pop	{r4, r5, r6}
+ 1218              	.LCFI10:
+ 1219              		.cfi_restore 6
+ 1220              		.cfi_restore 5
+ 1221              		.cfi_restore 4
+ 1222              		.cfi_def_cfa_offset 0
+ 1223 0042 7047     		bx	lr
+ 1224              		.cfi_endproc
+ 1225              	.LFE133:
+ 1227              		.section	.text.USBH_MSC_Read,"ax",%progbits
+ 1228              		.align	2
+ 1229              		.global	USBH_MSC_Read
+ 1230              		.thumb
+ 1231              		.thumb_func
+ 1233              	USBH_MSC_Read:
+ 1234              	.LFB134:
+ 689:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 690:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ 691:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_Read 
+ 692:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function performs a Read operation 
+ 693:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 694:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  lun: logical Unit Number
+ 695:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  address: sector address
+ 696:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  pbuf: pointer to data
+ 697:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  length: number of sector to read
+ 698:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ARM GAS  /tmp/ccsOxf3Q.s 			page 37
+
+
+ 699:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 700:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** USBH_StatusTypeDef USBH_MSC_Read(USBH_HandleTypeDef *phost,
+ 701:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                                      uint8_t lun,
+ 702:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                                      uint32_t address,
+ 703:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                                      uint8_t *pbuf,
+ 704:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                                      uint32_t length)
+ 705:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 1235              		.loc 1 705 0
+ 1236              		.cfi_startproc
+ 1237              		@ args = 4, pretend = 0, frame = 0
+ 1238              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1239              	.LVL146:
+ 1240 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 1241              	.LCFI11:
+ 1242              		.cfi_def_cfa_offset 20
+ 1243              		.cfi_offset 4, -20
+ 1244              		.cfi_offset 5, -16
+ 1245              		.cfi_offset 6, -12
+ 1246              		.cfi_offset 7, -8
+ 1247              		.cfi_offset 14, -4
+ 1248 0002 83B0     		sub	sp, sp, #12
+ 1249              	.LCFI12:
+ 1250              		.cfi_def_cfa_offset 32
+ 706:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   uint32_t timeout;
+ 707:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;   
+ 1251              		.loc 1 707 0
+ 1252 0004 D0F84445 		ldr	r4, [r0, #1348]
+ 1253 0008 E569     		ldr	r5, [r4, #28]
+ 1254              	.LVL147:
+ 708:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 709:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if ((phost->device.is_connected == 0) || 
+ 1255              		.loc 1 709 0
+ 1256 000a 90F81E43 		ldrb	r4, [r0, #798]	@ zero_extendqisi2
+ 1257 000e 14F0FF0F 		tst	r4, #255
+ 1258 0012 3BD0     		beq	.L95
+ 710:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       (phost->gState != HOST_CLASS) || 
+ 1259              		.loc 1 710 0 discriminator 1
+ 1260 0014 0478     		ldrb	r4, [r0]	@ zero_extendqisi2
+ 1261 0016 E4B2     		uxtb	r4, r4
+ 709:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       (phost->gState != HOST_CLASS) || 
+ 1262              		.loc 1 709 0 discriminator 1
+ 1263 0018 0A2C     		cmp	r4, #10
+ 1264 001a 39D1     		bne	.L96
+ 711:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       (MSC_Handle->unit[lun].state != MSC_IDLE))
+ 1265              		.loc 1 711 0
+ 1266 001c 3424     		movs	r4, #52
+ 1267 001e 04FB0154 		mla	r4, r4, r1, r5
+ 1268 0022 94F89040 		ldrb	r4, [r4, #144]	@ zero_extendqisi2
+ 710:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       (phost->gState != HOST_CLASS) || 
+ 1269              		.loc 1 710 0
+ 1270 0026 012C     		cmp	r4, #1
+ 1271 0028 34D1     		bne	.L97
+ 1272 002a 0C46     		mov	r4, r1
+ 1273 002c 0646     		mov	r6, r0
+ 712:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 713:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return  USBH_FAIL;
+ 714:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ARM GAS  /tmp/ccsOxf3Q.s 			page 38
+
+
+ 715:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_Handle->state = MSC_READ;
+ 1274              		.loc 1 715 0
+ 1275 002e 0620     		movs	r0, #6
+ 1276              	.LVL148:
+ 1277 0030 2873     		strb	r0, [r5, #12]
+ 716:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_Handle->unit[lun].state = MSC_READ;
+ 1278              		.loc 1 716 0
+ 1279 0032 3421     		movs	r1, #52
+ 1280              	.LVL149:
+ 1281 0034 01FB0451 		mla	r1, r1, r4, r5
+ 1282 0038 81F89000 		strb	r0, [r1, #144]
+ 717:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_Handle->rw_lun = lun;
+ 1283              		.loc 1 717 0
+ 1284 003c A5F8FA40 		strh	r4, [r5, #250]	@ movhi
+ 718:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_MSC_SCSI_Read(phost,
+ 1285              		.loc 1 718 0
+ 1286 0040 0899     		ldr	r1, [sp, #32]
+ 1287 0042 0091     		str	r1, [sp]
+ 1288 0044 2146     		mov	r1, r4
+ 1289 0046 3046     		mov	r0, r6
+ 1290 0048 FFF7FEFF 		bl	USBH_MSC_SCSI_Read
+ 1291              	.LVL150:
+ 719:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                      lun,
+ 720:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                      address,
+ 721:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                      pbuf,
+ 722:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                      length);
+ 723:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 724:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   timeout = phost->Timer;
+ 1292              		.loc 1 724 0
+ 1293 004c D6F88875 		ldr	r7, [r6, #1416]
+ 1294              	.LVL151:
+ 725:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 726:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   while (USBH_MSC_RdWrProcess(phost, lun) == USBH_BUSY)
+ 1295              		.loc 1 726 0
+ 1296 0050 12E0     		b	.L92
+ 1297              	.L94:
+ 727:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 728:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(((phost->Timer - timeout) > (10000 * length)) || (phost->device.is_connected == 0))
+ 1298              		.loc 1 728 0
+ 1299 0052 D6F88825 		ldr	r2, [r6, #1416]
+ 1300 0056 D21B     		subs	r2, r2, r7
+ 1301 0058 42F21073 		movw	r3, #10000
+ 1302 005c 0899     		ldr	r1, [sp, #32]
+ 1303 005e 03FB01F3 		mul	r3, r3, r1
+ 1304 0062 9A42     		cmp	r2, r3
+ 1305 0064 04D8     		bhi	.L93
+ 1306              		.loc 1 728 0 is_stmt 0 discriminator 1
+ 1307 0066 96F81E33 		ldrb	r3, [r6, #798]	@ zero_extendqisi2
+ 1308 006a 13F0FF0F 		tst	r3, #255
+ 1309 006e 03D1     		bne	.L92
+ 1310              	.L93:
+ 729:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 730:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->state = MSC_IDLE;
+ 1311              		.loc 1 730 0 is_stmt 1
+ 1312 0070 0123     		movs	r3, #1
+ 1313 0072 2B73     		strb	r3, [r5, #12]
+ 731:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       return USBH_FAIL;
+ARM GAS  /tmp/ccsOxf3Q.s 			page 39
+
+
+ 1314              		.loc 1 731 0
+ 1315 0074 0220     		movs	r0, #2
+ 1316 0076 0EE0     		b	.L91
+ 1317              	.L92:
+ 726:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 1318              		.loc 1 726 0
+ 1319 0078 2146     		mov	r1, r4
+ 1320 007a 3046     		mov	r0, r6
+ 1321 007c FFF7FEFF 		bl	USBH_MSC_RdWrProcess
+ 1322              	.LVL152:
+ 1323 0080 0128     		cmp	r0, #1
+ 1324 0082 E6D0     		beq	.L94
+ 732:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 733:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 734:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_Handle->state = MSC_IDLE;
+ 1325              		.loc 1 734 0
+ 1326 0084 0123     		movs	r3, #1
+ 1327 0086 2B73     		strb	r3, [r5, #12]
+ 735:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return USBH_OK;
+ 1328              		.loc 1 735 0
+ 1329 0088 0020     		movs	r0, #0
+ 1330 008a 04E0     		b	.L91
+ 1331              	.LVL153:
+ 1332              	.L95:
+ 713:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 1333              		.loc 1 713 0
+ 1334 008c 0220     		movs	r0, #2
+ 1335              	.LVL154:
+ 1336 008e 02E0     		b	.L91
+ 1337              	.LVL155:
+ 1338              	.L96:
+ 1339 0090 0220     		movs	r0, #2
+ 1340              	.LVL156:
+ 1341 0092 00E0     		b	.L91
+ 1342              	.LVL157:
+ 1343              	.L97:
+ 1344 0094 0220     		movs	r0, #2
+ 1345              	.LVL158:
+ 1346              	.L91:
+ 736:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 1347              		.loc 1 736 0
+ 1348 0096 03B0     		add	sp, sp, #12
+ 1349              	.LCFI13:
+ 1350              		.cfi_def_cfa_offset 20
+ 1351              		@ sp needed
+ 1352 0098 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 1353              		.cfi_endproc
+ 1354              	.LFE134:
+ 1356 009a 00BF     		.section	.text.USBH_MSC_Write,"ax",%progbits
+ 1357              		.align	2
+ 1358              		.global	USBH_MSC_Write
+ 1359              		.thumb
+ 1360              		.thumb_func
+ 1362              	USBH_MSC_Write:
+ 1363              	.LFB135:
+ 737:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** 
+ 738:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** /**
+ARM GAS  /tmp/ccsOxf3Q.s 			page 40
+
+
+ 739:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @brief  USBH_MSC_Write 
+ 740:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   *         The function performs a Write operation 
+ 741:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  phost: Host handle
+ 742:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  lun: logical Unit Number
+ 743:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  address: sector address
+ 744:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  pbuf: pointer to data
+ 745:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @param  length: number of sector to write
+ 746:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   * @retval USBH Status
+ 747:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   */
+ 748:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** USBH_StatusTypeDef USBH_MSC_Write(USBH_HandleTypeDef *phost,
+ 749:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                                      uint8_t lun,
+ 750:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                                      uint32_t address,
+ 751:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                                      uint8_t *pbuf,
+ 752:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                                      uint32_t length)
+ 753:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** {
+ 1364              		.loc 1 753 0
+ 1365              		.cfi_startproc
+ 1366              		@ args = 4, pretend = 0, frame = 0
+ 1367              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1368              	.LVL159:
+ 1369 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 1370              	.LCFI14:
+ 1371              		.cfi_def_cfa_offset 20
+ 1372              		.cfi_offset 4, -20
+ 1373              		.cfi_offset 5, -16
+ 1374              		.cfi_offset 6, -12
+ 1375              		.cfi_offset 7, -8
+ 1376              		.cfi_offset 14, -4
+ 1377 0002 83B0     		sub	sp, sp, #12
+ 1378              	.LCFI15:
+ 1379              		.cfi_def_cfa_offset 32
+ 754:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   uint32_t timeout;
+ 755:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_HandleTypeDef *MSC_Handle =  (MSC_HandleTypeDef *) phost->pActiveClass->pData;   
+ 1380              		.loc 1 755 0
+ 1381 0004 D0F84445 		ldr	r4, [r0, #1348]
+ 1382 0008 E569     		ldr	r5, [r4, #28]
+ 1383              	.LVL160:
+ 756:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 757:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   if ((phost->device.is_connected == 0) || 
+ 1384              		.loc 1 757 0
+ 1385 000a 90F81E43 		ldrb	r4, [r0, #798]	@ zero_extendqisi2
+ 1386 000e 14F0FF0F 		tst	r4, #255
+ 1387 0012 3BD0     		beq	.L104
+ 758:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       (phost->gState != HOST_CLASS) || 
+ 1388              		.loc 1 758 0 discriminator 1
+ 1389 0014 0478     		ldrb	r4, [r0]	@ zero_extendqisi2
+ 1390 0016 E4B2     		uxtb	r4, r4
+ 757:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       (phost->gState != HOST_CLASS) || 
+ 1391              		.loc 1 757 0 discriminator 1
+ 1392 0018 0A2C     		cmp	r4, #10
+ 1393 001a 39D1     		bne	.L105
+ 759:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       (MSC_Handle->unit[lun].state != MSC_IDLE))
+ 1394              		.loc 1 759 0
+ 1395 001c 3424     		movs	r4, #52
+ 1396 001e 04FB0154 		mla	r4, r4, r1, r5
+ 1397 0022 94F89040 		ldrb	r4, [r4, #144]	@ zero_extendqisi2
+ 758:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       (phost->gState != HOST_CLASS) || 
+ARM GAS  /tmp/ccsOxf3Q.s 			page 41
+
+
+ 1398              		.loc 1 758 0
+ 1399 0026 012C     		cmp	r4, #1
+ 1400 0028 34D1     		bne	.L106
+ 1401 002a 0C46     		mov	r4, r1
+ 1402 002c 0646     		mov	r6, r0
+ 760:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 761:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     return  USBH_FAIL;
+ 762:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 763:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_Handle->state = MSC_WRITE;
+ 1403              		.loc 1 763 0
+ 1404 002e 0720     		movs	r0, #7
+ 1405              	.LVL161:
+ 1406 0030 2873     		strb	r0, [r5, #12]
+ 764:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_Handle->unit[lun].state = MSC_WRITE;
+ 1407              		.loc 1 764 0
+ 1408 0032 3421     		movs	r1, #52
+ 1409              	.LVL162:
+ 1410 0034 01FB0451 		mla	r1, r1, r4, r5
+ 1411 0038 81F89000 		strb	r0, [r1, #144]
+ 765:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_Handle->rw_lun = lun;
+ 1412              		.loc 1 765 0
+ 1413 003c A5F8FA40 		strh	r4, [r5, #250]	@ movhi
+ 766:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   USBH_MSC_SCSI_Write(phost,
+ 1414              		.loc 1 766 0
+ 1415 0040 0899     		ldr	r1, [sp, #32]
+ 1416 0042 0091     		str	r1, [sp]
+ 1417 0044 2146     		mov	r1, r4
+ 1418 0046 3046     		mov	r0, r6
+ 1419 0048 FFF7FEFF 		bl	USBH_MSC_SCSI_Write
+ 1420              	.LVL163:
+ 767:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                      lun,
+ 768:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                      address,
+ 769:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                      pbuf,
+ 770:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****                      length);
+ 771:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   
+ 772:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   timeout = phost->Timer;
+ 1421              		.loc 1 772 0
+ 1422 004c D6F88875 		ldr	r7, [r6, #1416]
+ 1423              	.LVL164:
+ 773:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   while (USBH_MSC_RdWrProcess(phost, lun) == USBH_BUSY)
+ 1424              		.loc 1 773 0
+ 1425 0050 12E0     		b	.L101
+ 1426              	.L103:
+ 774:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 775:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     if(((phost->Timer - timeout) >  (10000 * length)) || (phost->device.is_connected == 0))
+ 1427              		.loc 1 775 0
+ 1428 0052 D6F88825 		ldr	r2, [r6, #1416]
+ 1429 0056 D21B     		subs	r2, r2, r7
+ 1430 0058 42F21073 		movw	r3, #10000
+ 1431 005c 0899     		ldr	r1, [sp, #32]
+ 1432 005e 03FB01F3 		mul	r3, r3, r1
+ 1433 0062 9A42     		cmp	r2, r3
+ 1434 0064 04D8     		bhi	.L102
+ 1435              		.loc 1 775 0 is_stmt 0 discriminator 1
+ 1436 0066 96F81E33 		ldrb	r3, [r6, #798]	@ zero_extendqisi2
+ 1437 006a 13F0FF0F 		tst	r3, #255
+ 1438 006e 03D1     		bne	.L101
+ARM GAS  /tmp/ccsOxf3Q.s 			page 42
+
+
+ 1439              	.L102:
+ 776:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     {
+ 777:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       MSC_Handle->state = MSC_IDLE;
+ 1440              		.loc 1 777 0 is_stmt 1
+ 1441 0070 0123     		movs	r3, #1
+ 1442 0072 2B73     		strb	r3, [r5, #12]
+ 778:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****       return USBH_FAIL;
+ 1443              		.loc 1 778 0
+ 1444 0074 0220     		movs	r0, #2
+ 1445 0076 0EE0     		b	.L100
+ 1446              	.L101:
+ 773:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   {
+ 1447              		.loc 1 773 0
+ 1448 0078 2146     		mov	r1, r4
+ 1449 007a 3046     		mov	r0, r6
+ 1450 007c FFF7FEFF 		bl	USBH_MSC_RdWrProcess
+ 1451              	.LVL165:
+ 1452 0080 0128     		cmp	r0, #1
+ 1453 0082 E6D0     		beq	.L103
+ 779:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****     }
+ 780:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 781:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   MSC_Handle->state = MSC_IDLE;
+ 1454              		.loc 1 781 0
+ 1455 0084 0123     		movs	r3, #1
+ 1456 0086 2B73     		strb	r3, [r5, #12]
+ 782:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   return USBH_OK;
+ 1457              		.loc 1 782 0
+ 1458 0088 0020     		movs	r0, #0
+ 1459 008a 04E0     		b	.L100
+ 1460              	.LVL166:
+ 1461              	.L104:
+ 761:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c ****   }
+ 1462              		.loc 1 761 0
+ 1463 008c 0220     		movs	r0, #2
+ 1464              	.LVL167:
+ 1465 008e 02E0     		b	.L100
+ 1466              	.LVL168:
+ 1467              	.L105:
+ 1468 0090 0220     		movs	r0, #2
+ 1469              	.LVL169:
+ 1470 0092 00E0     		b	.L100
+ 1471              	.LVL170:
+ 1472              	.L106:
+ 1473 0094 0220     		movs	r0, #2
+ 1474              	.LVL171:
+ 1475              	.L100:
+ 783:Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c **** }
+ 1476              		.loc 1 783 0
+ 1477 0096 03B0     		add	sp, sp, #12
+ 1478              	.LCFI16:
+ 1479              		.cfi_def_cfa_offset 20
+ 1480              		@ sp needed
+ 1481 0098 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 1482              		.cfi_endproc
+ 1483              	.LFE135:
+ 1485              		.global	USBH_msc
+ 1486 009a 00BF     		.section	.data.USBH_msc,"aw",%progbits
+ARM GAS  /tmp/ccsOxf3Q.s 			page 43
+
+
+ 1487              		.align	2
+ 1490              	USBH_msc:
+ 1491 0000 00000000 		.word	.LC0
+ 1492 0004 08       		.byte	8
+ 1493 0005 000000   		.space	3
+ 1494 0008 00000000 		.word	USBH_MSC_InterfaceInit
+ 1495 000c 00000000 		.word	USBH_MSC_InterfaceDeInit
+ 1496 0010 00000000 		.word	USBH_MSC_ClassRequest
+ 1497 0014 00000000 		.word	USBH_MSC_Process
+ 1498 0018 00000000 		.word	USBH_MSC_SOFProcess
+ 1499 001c 00000000 		.word	0
+ 1500              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1501              		.align	2
+ 1502              	.LC0:
+ 1503 0000 4D534300 		.ascii	"MSC\000"
+ 1504              		.text
+ 1505              	.Letext0:
+ 1506              		.file 2 "/home/ada/Downloads/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/machine/_default_t
+ 1507              		.file 3 "/home/ada/Downloads/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/sys/_stdint.h"
+ 1508              		.file 4 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h"
+ 1509              		.file 5 "Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Inc/usbh_msc_bot.h"
+ 1510              		.file 6 "Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Inc/usbh_msc_scsi.h"
+ 1511              		.file 7 "Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Inc/usbh_msc.h"
+ 1512              		.file 8 "Drivers/CMSIS/Include/core_cm4.h"
+ 1513              		.file 9 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h"
+ 1514              		.file 10 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h"
+ 1515              		.file 11 "/home/ada/Downloads/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/stdlib.h"
+ 1516              		.file 12 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h"
+ARM GAS  /tmp/ccsOxf3Q.s 			page 44
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usbh_msc.c
+     /tmp/ccsOxf3Q.s:22     .text.USBH_MSC_SOFProcess:00000000 $t
+     /tmp/ccsOxf3Q.s:26     .text.USBH_MSC_SOFProcess:00000000 USBH_MSC_SOFProcess
+     /tmp/ccsOxf3Q.s:43     .text.USBH_MSC_Process:00000000 $t
+     /tmp/ccsOxf3Q.s:47     .text.USBH_MSC_Process:00000000 USBH_MSC_Process
+     /tmp/ccsOxf3Q.s:93     .text.USBH_MSC_Process:0000003e $d
+     /tmp/ccsOxf3Q.s:102    .text.USBH_MSC_Process:00000050 $t
+     /tmp/ccsOxf3Q.s:464    .text.USBH_MSC_ClassRequest:00000000 $t
+     /tmp/ccsOxf3Q.s:468    .text.USBH_MSC_ClassRequest:00000000 USBH_MSC_ClassRequest
+     /tmp/ccsOxf3Q.s:566    .text.USBH_MSC_InterfaceDeInit:00000000 $t
+     /tmp/ccsOxf3Q.s:570    .text.USBH_MSC_InterfaceDeInit:00000000 USBH_MSC_InterfaceDeInit
+     /tmp/ccsOxf3Q.s:639    .text.USBH_MSC_InterfaceInit:00000000 $t
+     /tmp/ccsOxf3Q.s:643    .text.USBH_MSC_InterfaceInit:00000000 USBH_MSC_InterfaceInit
+     /tmp/ccsOxf3Q.s:828    .text.USBH_MSC_RdWrProcess:00000000 $t
+     /tmp/ccsOxf3Q.s:832    .text.USBH_MSC_RdWrProcess:00000000 USBH_MSC_RdWrProcess
+     /tmp/ccsOxf3Q.s:1026   .text.USBH_MSC_IsReady:00000000 $t
+     /tmp/ccsOxf3Q.s:1031   .text.USBH_MSC_IsReady:00000000 USBH_MSC_IsReady
+     /tmp/ccsOxf3Q.s:1067   .text.USBH_MSC_GetMaxLUN:00000000 $t
+     /tmp/ccsOxf3Q.s:1072   .text.USBH_MSC_GetMaxLUN:00000000 USBH_MSC_GetMaxLUN
+     /tmp/ccsOxf3Q.s:1113   .text.USBH_MSC_UnitIsReady:00000000 $t
+     /tmp/ccsOxf3Q.s:1118   .text.USBH_MSC_UnitIsReady:00000000 USBH_MSC_UnitIsReady
+     /tmp/ccsOxf3Q.s:1155   .text.USBH_MSC_GetLUNInfo:00000000 $t
+     /tmp/ccsOxf3Q.s:1160   .text.USBH_MSC_GetLUNInfo:00000000 USBH_MSC_GetLUNInfo
+     /tmp/ccsOxf3Q.s:1228   .text.USBH_MSC_Read:00000000 $t
+     /tmp/ccsOxf3Q.s:1233   .text.USBH_MSC_Read:00000000 USBH_MSC_Read
+     /tmp/ccsOxf3Q.s:1357   .text.USBH_MSC_Write:00000000 $t
+     /tmp/ccsOxf3Q.s:1362   .text.USBH_MSC_Write:00000000 USBH_MSC_Write
+     /tmp/ccsOxf3Q.s:1490   .data.USBH_msc:00000000 USBH_msc
+     /tmp/ccsOxf3Q.s:1487   .data.USBH_msc:00000000 $d
+     /tmp/ccsOxf3Q.s:1501   .rodata.str1.4:00000000 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+USBH_MSC_SCSI_Inquiry
+USBH_MSC_SCSI_TestUnitReady
+USBH_MSC_SCSI_ReadCapacity
+USBH_MSC_SCSI_RequestSense
+USBH_MSC_BOT_REQ_GetMaxLUN
+USBH_ClrFeature
+USBH_ClosePipe
+USBH_FreePipe
+free
+USBH_FindInterface
+USBH_SelectInterface
+malloc
+USBH_AllocPipe
+USBH_MSC_BOT_Init
+memset
+USBH_OpenPipe
+USBH_LL_SetToggle
+USBH_MSC_SCSI_Read
+USBH_MSC_SCSI_Write

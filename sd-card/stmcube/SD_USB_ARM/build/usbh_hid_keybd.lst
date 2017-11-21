@@ -1,0 +1,1538 @@
+ARM GAS  /tmp/cca3NXGo.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 1
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.syntax unified
+  17              		.file	"usbh_hid_keybd.c"
+  18              		.text
+  19              	.Ltext0:
+  20              		.cfi_sections	.debug_frame
+  21              		.section	.text.USBH_HID_KeybdDecode,"ax",%progbits
+  22              		.align	2
+  23              		.thumb
+  24              		.thumb_func
+  26              	USBH_HID_KeybdDecode:
+  27              	.LFB126:
+  28              		.file 1 "Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c"
+   1:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+   2:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   ******************************************************************************
+   3:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @file    usbh_hid_keybd.c 
+   4:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @author  MCD Application Team
+   5:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @version V3.2.2
+   6:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @date    07-July-2015
+   7:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @brief   This file is the application layer for USB Host HID Keyboard handling
+   8:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *          QWERTY and AZERTY Keyboard are supported as per the selection in 
+   9:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *          usbh_hid_keybd.h              
+  10:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   ******************************************************************************
+  11:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @attention
+  12:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *
+  13:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
+  14:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *
+  15:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  16:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * You may not use this file except in compliance with the License.
+  17:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * You may obtain a copy of the License at:
+  18:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *
+  19:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *        http://www.st.com/software_license_agreement_liberty_v2
+  20:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *
+  21:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * Unless required by applicable law or agreed to in writing, software 
+  22:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * distributed under the License is distributed on an "AS IS" BASIS, 
+  23:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  24:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * See the License for the specific language governing permissions and
+  25:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * limitations under the License.
+  26:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *
+  27:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   ******************************************************************************
+  28:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   */ 
+  29:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  30:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ARM GAS  /tmp/cca3NXGo.s 			page 2
+
+
+  31:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /* Includes ------------------------------------------------------------------*/
+  32:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #include "usbh_hid_keybd.h"
+  33:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #include "usbh_hid_parser.h"
+  34:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  35:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @addtogroup USBH_LIB
+  36:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+  37:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */
+  38:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  39:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @addtogroup USBH_CLASS
+  40:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+  41:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */
+  42:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  43:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @addtogroup USBH_HID_CLASS
+  44:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+  45:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */
+  46:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  47:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @defgroup USBH_HID_KEYBD 
+  48:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @brief    This file includes HID Layer Handlers for USB Host HID class.
+  49:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+  50:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  51:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  52:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @defgroup USBH_HID_KEYBD_Private_TypesDefinitions
+  53:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+  54:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  55:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+  56:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @}
+  57:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  58:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  59:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  60:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @defgroup USBH_HID_KEYBD_Private_Defines
+  61:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+  62:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  63:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+  64:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @}
+  65:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  66:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #ifndef AZERTY_KEYBOARD
+  67:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   #define QWERTY_KEYBOARD
+  68:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #endif
+  69:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBD_LEFT_CTRL                                  0x01
+  70:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBD_LEFT_SHIFT                                 0x02
+  71:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBD_LEFT_ALT                                   0x04
+  72:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBD_LEFT_GUI                                   0x08
+  73:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBD_RIGHT_CTRL                                 0x10
+  74:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBD_RIGHT_SHIFT                                0x20
+  75:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBD_RIGHT_ALT                                  0x40
+  76:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBD_RIGHT_GUI                                  0x80
+  77:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #define  KBR_MAX_NBR_PRESSED                            6
+  78:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  79:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @defgroup USBH_HID_KEYBD_Private_Macros
+  80:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+  81:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  82:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+  83:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @}
+  84:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  85:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  86:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @defgroup USBH_HID_KEYBD_Private_FunctionPrototypes
+  87:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+ARM GAS  /tmp/cca3NXGo.s 			page 3
+
+
+  88:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  89:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static USBH_StatusTypeDef USBH_HID_KeybdDecode(USBH_HandleTypeDef *phost);
+  90:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+  91:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @}
+  92:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */ 
+  93:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  
+  94:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /** @defgroup USBH_HID_KEYBD_Private_Variables
+  95:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** * @{
+  96:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** */
+  97:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+  98:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** HID_KEYBD_Info_TypeDef     keybd_info;
+  99:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** uint32_t                   keybd_report_data[2];
+ 100:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 101:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_lctrl={
+ 102:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+0, /*data*/
+ 103:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*size*/
+ 104:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*shift*/
+ 105:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*count (only for array items)*/ 
+ 106:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/ 
+ 107:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 108:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value read can return*/
+ 109:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 110:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value device can report*/
+ 111:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 112:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 113:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_lshift={
+ 114:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+0, /*data*/
+ 115:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*size*/
+ 116:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*shift*/
+ 117:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*count (only for array items)*/  
+ 118:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/ 
+ 119:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 120:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value read can return*/
+ 121:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 122:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value device can report*/
+ 123:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 124:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 125:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_lalt={
+ 126:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+0, /*data*/
+ 127:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*size*/
+ 128:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   2,     /*shift*/
+ 129:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*count (only for array items)*/  
+ 130:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/   
+ 131:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 132:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value read can return*/
+ 133:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 134:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value device can report*/
+ 135:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 136:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 137:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_lgui={
+ 138:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+0, /*data*/
+ 139:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*size*/
+ 140:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   3,     /*shift*/
+ 141:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*count (only for array items)*/  
+ 142:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/
+ 143:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 144:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value read can return*/
+ARM GAS  /tmp/cca3NXGo.s 			page 4
+
+
+ 145:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 146:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value device can report*/
+ 147:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 148:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 149:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_rctrl={
+ 150:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+0, /*data*/
+ 151:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*size*/
+ 152:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   4,     /*shift*/
+ 153:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*count (only for array items)*/  
+ 154:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/
+ 155:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 156:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value read can return*/
+ 157:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 158:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value device can report*/
+ 159:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 160:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 161:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_rshift={
+ 162:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+0, /*data*/
+ 163:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*size*/
+ 164:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   5,     /*shift*/
+ 165:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*count (only for array items)*/  
+ 166:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/
+ 167:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 168:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value read can return*/
+ 169:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 170:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value device can report*/
+ 171:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 172:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 173:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_ralt={
+ 174:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+0, /*data*/
+ 175:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*size*/
+ 176:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   6,     /*shift*/
+ 177:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*count (only for array items)*/  
+ 178:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/
+ 179:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 180:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value read can return*/
+ 181:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 182:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value device can report*/
+ 183:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 184:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 185:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_rgui={
+ 186:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+0, /*data*/
+ 187:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*size*/
+ 188:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   7,     /*shift*/
+ 189:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*count (only for array items)*/  
+ 190:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/
+ 191:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 192:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value read can return*/
+ 193:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 194:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1,     /*max value device can report*/
+ 195:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 196:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 197:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 198:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static const HID_Report_ItemTypedef imp_0_key_array={
+ 199:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   (uint8_t*)keybd_report_data+2, /*data*/
+ 200:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   8,     /*size*/
+ 201:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*shift*/
+ARM GAS  /tmp/cca3NXGo.s 			page 5
+
+
+ 202:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   6,     /*count (only for array items)*/
+ 203:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*signed?*/  
+ 204:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min value read can return*/
+ 205:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   101,   /*max value read can return*/
+ 206:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     /*min vale device can report*/
+ 207:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   101,   /*max value device can report*/
+ 208:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   1      /*resolution*/
+ 209:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 210:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 211:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #ifdef QWERTY_KEYBOARD
+ 212:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static  const  int8_t  HID_KEYBRD_Key[] = {
+ 213:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  '`',  '1',  '2',  '3',  '4',  '5',  '6',
+ 214:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '7',  '8',  '9',  '0',  '-',  '=',  '\0', '\r',
+ 215:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\t',  'q',  'w',  'e',  'r',  't',  'y',  'u', 
+ 216:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'i',  'o',  'p',  '[',  ']',  '\\',
+ 217:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  'a',  's',  'd',  'f',  'g',  'h',  'j',  
+ 218:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'k',  'l',  ';',  '\'', '\0', '\n',
+ 219:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  '\0', 'z',  'x',  'c',  'v',  'b',  'n', 
+ 220:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'm',  ',',  '.',  '/',  '\0', '\0',
+ 221:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  '\0', '\0', ' ',  '\0', '\0', '\0', '\0', 
+ 222:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+ 223:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  '\0', '\0', '\0', '\0', '\r', '\0', '\0', 
+ 224:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0',
+ 225:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  '\0', '7',  '4',  '1',
+ 226:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  '/',  '8',  '5',  '2',
+ 227:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '0',   '*',  '9',  '6',  '3',
+ 228:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '.',   '-',  '+',  '\0', '\n', '\0', '\0', '\0', '\0', '\0', '\0',
+ 229:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+ 230:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0'
+ 231:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 232:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 233:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static  const  int8_t  HID_KEYBRD_ShiftKey[] = {
+ 234:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '~',  '!',  '@',  '#',  '$',  '%',  '^',  '&',  '*',  '(',  ')',
+ 235:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '_',  '+',  '\0', '\0', '\0', 'Q',  'W',  'E',  'R',  'T',  'Y',  'U', 
+ 236:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'I',  'O',  'P',  '{',  '}',  '|',  '\0', 'A',  'S',  'D',  'F',  'G', 
+ 237:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'H',  'J',  'K',  'L',  ':',  '"',  '\0', '\n', '\0', '\0', 'Z',  'X',  
+ 238:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'C',  'V',  'B',  'N',  'M',  '<',  '>',  '?',  '\0', '\0',  '\0', '\0',
+ 239:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+ 240:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+ 241:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+ 242:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+ 243:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0',    '\0', '\0', '\0', '\0', '\0',
+ 244:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+ 245:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 246:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 247:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #else
+ 248:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 249:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static  const  int8_t  HID_KEYBRD_Key[] = {
+ 250:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0',  '`',  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  '0',
+ 251:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '-',  '=',  '\0', '\r', '\t',  'a',  'z',  'e',  'r',  't',  'y',  'u', 
+ 252:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'i',  'o',  'p',  '[',  ']', '\\', '\0',  'q',  's',  'd',  'f',  'g', 
+ 253:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'h',  'j',  'k',  'l',  'm',  '\0', '\0', '\n', '\0',  '\0', 'w',  'x', 
+ 254:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'c',  'v',  'b',  'n',  ',',  ';',  ':',  '!',  '\0', '\0', '\0',  '\0', 
+ 255:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', ' ',  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+ 256:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0',  '\0', '\0', '\0', '\0', '\r', '\0', '\0', '\0', 
+ 257:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0',  '\0', '7',  '4',  '1','\0',  '/', 
+ 258:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '8',  '5',  '2', '0',   '*',  '9',  '6',  '3', '.',   '-',  '+',  '\0', 
+ARM GAS  /tmp/cca3NXGo.s 			page 6
+
+
+ 259:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\n', '\0', '\0', '\0', '\0', '\0', '\0','\0',  '\0', '\0', '\0', '\0', '\0',
+ 260:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+ 261:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 262:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 263:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static  const  int8_t  HID_KEYBRD_ShiftKey[] = {
+ 264:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '~',  '!',  '@',  '#',  '$',  '%',  '^',  '&',  '*',  '(',  ')',  '_',
+ 265:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '+',  '\0', '\0', '\0', 'A',  'Z',  'E',  'R',  'T',  'Y',  'U',  'I',  'O',
+ 266:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'P',  '{',  '}',  '*', '\0', 'Q',  'S',  'D',  'F',  'G',  'H',  'J',  'K', 
+ 267:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   'L',  'M',  '%',  '\0', '\n', '\0', '\0', 'W',  'X',  'C',  'V',  'B',  'N',
+ 268:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '?',  '.',  '/',  '\0',  '\0', '\0','\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+ 269:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+ 270:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+ 271:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+ 272:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 
+ 273:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+ 274:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 275:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** #endif
+ 276:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 277:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static  const  uint8_t  HID_KEYBRD_Codes[] = {
+ 278:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,     0,    0,    0,   31,   50,   48,   33, 
+ 279:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   19,   34,   35,   36,   24,   37,   38,   39,       /* 0x00 - 0x0F */
+ 280:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   52,    51,   25,   26,   17,   20,   32,   21,
+ 281:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   23,   49,   18,   47,   22,   46,    2,    3,       /* 0x10 - 0x1F */
+ 282:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   4,    5,    6,    7,    8,    9,   10,   11, 
+ 283:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   43,  110,   15,   16,   61,   12,   13,   27,       /* 0x20 - 0x2F */
+ 284:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   28,   29,   42,   40,   41,    1,   53,   54,  
+ 285:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   55,   30,  112,  113,  114,  115,  116,  117,       /* 0x30 - 0x3F */
+ 286:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   118,  119,  120,  121,  122,  123,  124,  125,  
+ 287:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   126,   75,   80,   85,   76,   81,   86,   89,       /* 0x40 - 0x4F */
+ 288:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   79,   84,   83,   90,   95,  100,  105,  106,
+ 289:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   108,   93,   98,  103,   92,   97,  102,   91,       /* 0x50 - 0x5F */
+ 290:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   96,  101,   99,  104,   45,  129,    0,    0, 
+ 291:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,       /* 0x60 - 0x6F */
+ 292:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,
+ 293:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,       /* 0x70 - 0x7F */
+ 294:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,  107,    0,   56,
+ 295:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,       /* 0x80 - 0x8F */
+ 296:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,
+ 297:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,       /* 0x90 - 0x9F */
+ 298:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,
+ 299:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,       /* 0xA0 - 0xAF */
+ 300:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0, 
+ 301:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,       /* 0xB0 - 0xBF */
+ 302:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0, 
+ 303:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,       /* 0xC0 - 0xCF */
+ 304:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0, 
+ 305:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   0,    0,    0,    0,    0,    0,    0,    0,       /* 0xD0 - 0xDF */
+ 306:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   58,   44,   60,  127,   64,   57,   62,  128        /* 0xE0 - 0xE7 */
+ 307:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** };
+ 308:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 309:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+ 310:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @brief  USBH_HID_KeybdInit 
+ 311:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *         The function init the HID keyboard.
+ 312:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @param  phost: Host handle
+ 313:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @retval USBH Status
+ 314:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   */
+ 315:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** USBH_StatusTypeDef USBH_HID_KeybdInit(USBH_HandleTypeDef *phost)
+ARM GAS  /tmp/cca3NXGo.s 			page 7
+
+
+ 316:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** {
+ 317:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   uint32_t x;
+ 318:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   HID_HandleTypeDef *HID_Handle =  (HID_HandleTypeDef *) phost->pActiveClass->pData;  
+ 319:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     
+ 320:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   keybd_info.lctrl=keybd_info.lshift= 0;
+ 321:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   keybd_info.lalt=keybd_info.lgui= 0;
+ 322:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   keybd_info.rctrl=keybd_info.rshift= 0;
+ 323:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   keybd_info.ralt=keybd_info.rgui=0;
+ 324:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   
+ 325:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   
+ 326:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   for(x=0; x< (sizeof(keybd_report_data)/sizeof(uint32_t)); x++)
+ 327:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_report_data[x]=0;
+ 329:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ 330:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   
+ 331:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   if(HID_Handle->length > (sizeof(keybd_report_data)/sizeof(uint32_t)))
+ 332:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 333:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     HID_Handle->length = (sizeof(keybd_report_data)/sizeof(uint32_t));
+ 334:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ 335:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   HID_Handle->pData = (uint8_t*)keybd_report_data;
+ 336:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   fifo_init(&HID_Handle->fifo, phost->device.Data, HID_QUEUE_SIZE * sizeof(keybd_report_data));
+ 337:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   
+ 338:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   return USBH_OK;    
+ 339:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** }
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 341:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+ 342:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @brief  USBH_HID_GetKeybdInfo 
+ 343:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *         The function return keyboard information.
+ 344:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @param  phost: Host handle
+ 345:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @retval keyboard information
+ 346:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   */
+ 347:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** HID_KEYBD_Info_TypeDef *USBH_HID_GetKeybdInfo(USBH_HandleTypeDef *phost)
+ 348:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** {
+ 349:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   if(USBH_HID_KeybdDecode(phost) == USBH_OK)
+ 350:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  {
+ 351:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   return &keybd_info;
+ 352:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  }
+ 353:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  else
+ 354:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  {
+ 355:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   return NULL; 
+ 356:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  }  
+ 357:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** }
+ 358:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 359:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+ 360:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @brief  USBH_HID_KeybdDecode 
+ 361:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *         The function decode keyboard data.
+ 362:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @param  phost: Host handle
+ 363:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @retval USBH Status
+ 364:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   */
+ 365:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** static USBH_StatusTypeDef USBH_HID_KeybdDecode(USBH_HandleTypeDef *phost)
+ 366:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** {
+  29              		.loc 1 366 0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              	.LVL0:
+  34 0000 10B5     		push	{r4, lr}
+ARM GAS  /tmp/cca3NXGo.s 			page 8
+
+
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 4, -8
+  38              		.cfi_offset 14, -4
+ 367:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   uint8_t x;
+ 368:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   
+ 369:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   HID_HandleTypeDef *HID_Handle =  (HID_HandleTypeDef *) phost->pActiveClass->pData;
+  39              		.loc 1 369 0
+  40 0002 D0F84435 		ldr	r3, [r0, #1348]
+  41 0006 DC69     		ldr	r4, [r3, #28]
+  42              	.LVL1:
+ 370:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   if(HID_Handle->length == 0)
+  43              		.loc 1 370 0
+  44 0008 228B     		ldrh	r2, [r4, #24]
+  45 000a 002A     		cmp	r2, #0
+  46 000c 3FD0     		beq	.L5
+ 371:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 372:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     return USBH_FAIL;
+ 373:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ 374:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   /*Fill report */
+ 375:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   if(fifo_read(&HID_Handle->fifo, &keybd_report_data, HID_Handle->length) ==  HID_Handle->length)
+  47              		.loc 1 375 0
+  48 000e 2249     		ldr	r1, .L8
+  49 0010 04F10800 		add	r0, r4, #8
+  50              	.LVL2:
+  51 0014 FFF7FEFF 		bl	fifo_read
+  52              	.LVL3:
+  53 0018 238B     		ldrh	r3, [r4, #24]
+  54 001a 9842     		cmp	r0, r3
+  55 001c 39D1     		bne	.L6
+ 376:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 377:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     
+ 378:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_info.lctrl=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_lctrl, 0);
+  56              		.loc 1 378 0
+  57 001e 0021     		movs	r1, #0
+  58 0020 1E48     		ldr	r0, .L8+4
+  59 0022 FFF7FEFF 		bl	HID_ReadItem
+  60              	.LVL4:
+  61 0026 1E4C     		ldr	r4, .L8+8
+  62              	.LVL5:
+  63 0028 6070     		strb	r0, [r4, #1]
+ 379:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_info.lshift=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_lshift, 0);
+  64              		.loc 1 379 0
+  65 002a 0021     		movs	r1, #0
+  66 002c 1D48     		ldr	r0, .L8+12
+  67 002e FFF7FEFF 		bl	HID_ReadItem
+  68              	.LVL6:
+  69 0032 A070     		strb	r0, [r4, #2]
+ 380:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_info.lalt=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_lalt, 0);
+  70              		.loc 1 380 0
+  71 0034 0021     		movs	r1, #0
+  72 0036 1C48     		ldr	r0, .L8+16
+  73 0038 FFF7FEFF 		bl	HID_ReadItem
+  74              	.LVL7:
+  75 003c E070     		strb	r0, [r4, #3]
+ 381:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_info.lgui=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_lgui, 0);
+  76              		.loc 1 381 0
+ARM GAS  /tmp/cca3NXGo.s 			page 9
+
+
+  77 003e 0021     		movs	r1, #0
+  78 0040 1A48     		ldr	r0, .L8+20
+  79 0042 FFF7FEFF 		bl	HID_ReadItem
+  80              	.LVL8:
+  81 0046 2071     		strb	r0, [r4, #4]
+ 382:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_info.rctrl=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_rctrl, 0);
+  82              		.loc 1 382 0
+  83 0048 0021     		movs	r1, #0
+  84 004a 1948     		ldr	r0, .L8+24
+  85 004c FFF7FEFF 		bl	HID_ReadItem
+  86              	.LVL9:
+  87 0050 6071     		strb	r0, [r4, #5]
+ 383:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_info.rshift=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_rshift, 0);
+  88              		.loc 1 383 0
+  89 0052 0021     		movs	r1, #0
+  90 0054 1748     		ldr	r0, .L8+28
+  91 0056 FFF7FEFF 		bl	HID_ReadItem
+  92              	.LVL10:
+  93 005a A071     		strb	r0, [r4, #6]
+ 384:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_info.ralt=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_ralt, 0);
+  94              		.loc 1 384 0
+  95 005c 0021     		movs	r1, #0
+  96 005e 1648     		ldr	r0, .L8+32
+  97 0060 FFF7FEFF 		bl	HID_ReadItem
+  98              	.LVL11:
+  99 0064 E071     		strb	r0, [r4, #7]
+ 385:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     keybd_info.rgui=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_rgui, 0);
+ 100              		.loc 1 385 0
+ 101 0066 0021     		movs	r1, #0
+ 102 0068 1448     		ldr	r0, .L8+36
+ 103 006a FFF7FEFF 		bl	HID_ReadItem
+ 104              	.LVL12:
+ 105 006e 2072     		strb	r0, [r4, #8]
+ 106              	.LVL13:
+ 386:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     
+ 387:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     for(x=0; x < sizeof(keybd_info.keys); x++)
+ 107              		.loc 1 387 0
+ 108 0070 0024     		movs	r4, #0
+ 109 0072 08E0     		b	.L3
+ 110              	.LVL14:
+ 111              	.L4:
+ 388:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     {    
+ 389:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****       keybd_info.keys[x]=(uint8_t)HID_ReadItem((HID_Report_ItemTypedef *) &imp_0_key_array, x);
+ 112              		.loc 1 389 0 discriminator 3
+ 113 0074 2146     		mov	r1, r4
+ 114 0076 1248     		ldr	r0, .L8+40
+ 115 0078 FFF7FEFF 		bl	HID_ReadItem
+ 116              	.LVL15:
+ 117 007c 084B     		ldr	r3, .L8+8
+ 118 007e 2344     		add	r3, r3, r4
+ 119 0080 5872     		strb	r0, [r3, #9]
+ 387:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     {    
+ 120              		.loc 1 387 0 discriminator 3
+ 121 0082 0134     		adds	r4, r4, #1
+ 122              	.LVL16:
+ 123 0084 E4B2     		uxtb	r4, r4
+ 124              	.LVL17:
+ARM GAS  /tmp/cca3NXGo.s 			page 10
+
+
+ 125              	.L3:
+ 387:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     {    
+ 126              		.loc 1 387 0 is_stmt 0 discriminator 1
+ 127 0086 052C     		cmp	r4, #5
+ 128 0088 F4D9     		bls	.L4
+ 390:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     }
+ 391:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     
+ 392:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     return USBH_OK; 
+ 129              		.loc 1 392 0 is_stmt 1
+ 130 008a 0020     		movs	r0, #0
+ 131 008c 10BD     		pop	{r4, pc}
+ 132              	.LVL18:
+ 133              	.L5:
+ 372:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ 134              		.loc 1 372 0
+ 135 008e 0220     		movs	r0, #2
+ 136              	.LVL19:
+ 137 0090 10BD     		pop	{r4, pc}
+ 138              	.LVL20:
+ 139              	.L6:
+ 393:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ 394:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   return   USBH_FAIL;  
+ 140              		.loc 1 394 0
+ 141 0092 0220     		movs	r0, #2
+ 395:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** }
+ 142              		.loc 1 395 0
+ 143 0094 10BD     		pop	{r4, pc}
+ 144              	.LVL21:
+ 145              	.L9:
+ 146 0096 00BF     		.align	2
+ 147              	.L8:
+ 148 0098 00000000 		.word	keybd_report_data
+ 149 009c 00000000 		.word	.LANCHOR0
+ 150 00a0 00000000 		.word	keybd_info
+ 151 00a4 00000000 		.word	.LANCHOR1
+ 152 00a8 00000000 		.word	.LANCHOR2
+ 153 00ac 00000000 		.word	.LANCHOR3
+ 154 00b0 00000000 		.word	.LANCHOR4
+ 155 00b4 00000000 		.word	.LANCHOR5
+ 156 00b8 00000000 		.word	.LANCHOR6
+ 157 00bc 00000000 		.word	.LANCHOR7
+ 158 00c0 00000000 		.word	.LANCHOR8
+ 159              		.cfi_endproc
+ 160              	.LFE126:
+ 162              		.section	.text.USBH_HID_KeybdInit,"ax",%progbits
+ 163              		.align	2
+ 164              		.global	USBH_HID_KeybdInit
+ 165              		.thumb
+ 166              		.thumb_func
+ 168              	USBH_HID_KeybdInit:
+ 169              	.LFB124:
+ 316:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   uint32_t x;
+ 170              		.loc 1 316 0
+ 171              		.cfi_startproc
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+ 174              	.LVL22:
+ARM GAS  /tmp/cca3NXGo.s 			page 11
+
+
+ 175 0000 38B5     		push	{r3, r4, r5, lr}
+ 176              	.LCFI1:
+ 177              		.cfi_def_cfa_offset 16
+ 178              		.cfi_offset 3, -16
+ 179              		.cfi_offset 4, -12
+ 180              		.cfi_offset 5, -8
+ 181              		.cfi_offset 14, -4
+ 318:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****     
+ 182              		.loc 1 318 0
+ 183 0002 D0F84435 		ldr	r3, [r0, #1348]
+ 184 0006 DC69     		ldr	r4, [r3, #28]
+ 185              	.LVL23:
+ 320:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   keybd_info.lalt=keybd_info.lgui= 0;
+ 186              		.loc 1 320 0
+ 187 0008 104A     		ldr	r2, .L15
+ 188 000a 0023     		movs	r3, #0
+ 189 000c 9370     		strb	r3, [r2, #2]
+ 190 000e 5370     		strb	r3, [r2, #1]
+ 321:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   keybd_info.rctrl=keybd_info.rshift= 0;
+ 191              		.loc 1 321 0
+ 192 0010 1371     		strb	r3, [r2, #4]
+ 193 0012 D370     		strb	r3, [r2, #3]
+ 322:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   keybd_info.ralt=keybd_info.rgui=0;
+ 194              		.loc 1 322 0
+ 195 0014 9371     		strb	r3, [r2, #6]
+ 196 0016 5371     		strb	r3, [r2, #5]
+ 323:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   
+ 197              		.loc 1 323 0
+ 198 0018 1372     		strb	r3, [r2, #8]
+ 199 001a D371     		strb	r3, [r2, #7]
+ 200              	.LVL24:
+ 326:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 201              		.loc 1 326 0
+ 202 001c 04E0     		b	.L11
+ 203              	.LVL25:
+ 204              	.L12:
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ 205              		.loc 1 328 0 discriminator 3
+ 206 001e 0025     		movs	r5, #0
+ 207 0020 0B4A     		ldr	r2, .L15+4
+ 208 0022 42F82350 		str	r5, [r2, r3, lsl #2]
+ 326:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 209              		.loc 1 326 0 discriminator 3
+ 210 0026 0133     		adds	r3, r3, #1
+ 211              	.LVL26:
+ 212              	.L11:
+ 326:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 213              		.loc 1 326 0 is_stmt 0 discriminator 1
+ 214 0028 012B     		cmp	r3, #1
+ 215 002a F8D9     		bls	.L12
+ 331:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 216              		.loc 1 331 0 is_stmt 1
+ 217 002c 238B     		ldrh	r3, [r4, #24]
+ 218              	.LVL27:
+ 219 002e 022B     		cmp	r3, #2
+ 220 0030 01D9     		bls	.L13
+ 333:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ARM GAS  /tmp/cca3NXGo.s 			page 12
+
+
+ 221              		.loc 1 333 0
+ 222 0032 0223     		movs	r3, #2
+ 223 0034 2383     		strh	r3, [r4, #24]	@ movhi
+ 224              	.L13:
+ 335:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   fifo_init(&HID_Handle->fifo, phost->device.Data, HID_QUEUE_SIZE * sizeof(keybd_report_data));
+ 225              		.loc 1 335 0
+ 226 0036 064B     		ldr	r3, .L15+4
+ 227 0038 6361     		str	r3, [r4, #20]
+ 336:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   
+ 228              		.loc 1 336 0
+ 229 003a 5022     		movs	r2, #80
+ 230 003c 00F58E71 		add	r1, r0, #284
+ 231 0040 04F10800 		add	r0, r4, #8
+ 232              	.LVL28:
+ 233 0044 FFF7FEFF 		bl	fifo_init
+ 234              	.LVL29:
+ 339:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 235              		.loc 1 339 0
+ 236 0048 0020     		movs	r0, #0
+ 237 004a 38BD     		pop	{r3, r4, r5, pc}
+ 238              	.LVL30:
+ 239              	.L16:
+ 240              		.align	2
+ 241              	.L15:
+ 242 004c 00000000 		.word	keybd_info
+ 243 0050 00000000 		.word	keybd_report_data
+ 244              		.cfi_endproc
+ 245              	.LFE124:
+ 247              		.section	.text.USBH_HID_GetKeybdInfo,"ax",%progbits
+ 248              		.align	2
+ 249              		.global	USBH_HID_GetKeybdInfo
+ 250              		.thumb
+ 251              		.thumb_func
+ 253              	USBH_HID_GetKeybdInfo:
+ 254              	.LFB125:
+ 348:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   if(USBH_HID_KeybdDecode(phost) == USBH_OK)
+ 255              		.loc 1 348 0
+ 256              		.cfi_startproc
+ 257              		@ args = 0, pretend = 0, frame = 0
+ 258              		@ frame_needed = 0, uses_anonymous_args = 0
+ 259              	.LVL31:
+ 260 0000 08B5     		push	{r3, lr}
+ 261              	.LCFI2:
+ 262              		.cfi_def_cfa_offset 8
+ 263              		.cfi_offset 3, -8
+ 264              		.cfi_offset 14, -4
+ 349:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  {
+ 265              		.loc 1 349 0
+ 266 0002 FFF7FEFF 		bl	USBH_HID_KeybdDecode
+ 267              	.LVL32:
+ 268 0006 08B9     		cbnz	r0, .L19
+ 351:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  }
+ 269              		.loc 1 351 0
+ 270 0008 0148     		ldr	r0, .L21
+ 271 000a 08BD     		pop	{r3, pc}
+ 272              	.L19:
+ 355:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****  }  
+ARM GAS  /tmp/cca3NXGo.s 			page 13
+
+
+ 273              		.loc 1 355 0
+ 274 000c 0020     		movs	r0, #0
+ 357:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 275              		.loc 1 357 0
+ 276 000e 08BD     		pop	{r3, pc}
+ 277              	.L22:
+ 278              		.align	2
+ 279              	.L21:
+ 280 0010 00000000 		.word	keybd_info
+ 281              		.cfi_endproc
+ 282              	.LFE125:
+ 284              		.section	.text.USBH_HID_GetASCIICode,"ax",%progbits
+ 285              		.align	2
+ 286              		.global	USBH_HID_GetASCIICode
+ 287              		.thumb
+ 288              		.thumb_func
+ 290              	USBH_HID_GetASCIICode:
+ 291              	.LFB127:
+ 396:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** 
+ 397:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** /**
+ 398:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @brief  USBH_HID_GetASCIICode 
+ 399:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   *         The function decode keyboard data into ASCII characters.
+ 400:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @param  phost: Host handle
+ 401:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @param  info: Keyboard information
+ 402:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   * @retval ASCII code
+ 403:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   */
+ 404:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** uint8_t USBH_HID_GetASCIICode(HID_KEYBD_Info_TypeDef *info)
+ 405:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** {
+ 292              		.loc 1 405 0
+ 293              		.cfi_startproc
+ 294              		@ args = 0, pretend = 0, frame = 0
+ 295              		@ frame_needed = 0, uses_anonymous_args = 0
+ 296              		@ link register save eliminated.
+ 297              	.LVL33:
+ 406:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   uint8_t   output;  
+ 407:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   if((info->lshift == 1) || (info->rshift))
+ 298              		.loc 1 407 0
+ 299 0000 8378     		ldrb	r3, [r0, #2]	@ zero_extendqisi2
+ 300 0002 012B     		cmp	r3, #1
+ 301 0004 01D0     		beq	.L24
+ 302              		.loc 1 407 0 is_stmt 0 discriminator 1
+ 303 0006 8379     		ldrb	r3, [r0, #6]	@ zero_extendqisi2
+ 304 0008 2BB1     		cbz	r3, .L25
+ 305              	.L24:
+ 408:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 409:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   output =  HID_KEYBRD_ShiftKey[HID_KEYBRD_Codes[info->keys[0]]];
+ 306              		.loc 1 409 0 is_stmt 1
+ 307 000a 437A     		ldrb	r3, [r0, #9]	@ zero_extendqisi2
+ 308 000c 054A     		ldr	r2, .L27
+ 309 000e D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 310 0010 054A     		ldr	r2, .L27+4
+ 311 0012 D05C     		ldrb	r0, [r2, r3]	@ zero_extendqisi2
+ 312              	.LVL34:
+ 313 0014 7047     		bx	lr
+ 314              	.LVL35:
+ 315              	.L25:
+ 410:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ARM GAS  /tmp/cca3NXGo.s 			page 14
+
+
+ 411:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   else
+ 412:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   {
+ 413:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   output =  HID_KEYBRD_Key[HID_KEYBRD_Codes[info->keys[0]]];
+ 316              		.loc 1 413 0
+ 317 0016 437A     		ldrb	r3, [r0, #9]	@ zero_extendqisi2
+ 318 0018 024A     		ldr	r2, .L27
+ 319 001a D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 320 001c 034A     		ldr	r2, .L27+8
+ 321 001e D05C     		ldrb	r0, [r2, r3]	@ zero_extendqisi2
+ 322              	.LVL36:
+ 414:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   }
+ 415:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c ****   return output;  
+ 416:Middlewares/ST/STM32_USB_Host_Library/Class/HID/Src/usbh_hid_keybd.c **** }
+ 323              		.loc 1 416 0
+ 324 0020 7047     		bx	lr
+ 325              	.L28:
+ 326 0022 00BF     		.align	2
+ 327              	.L27:
+ 328 0024 00000000 		.word	.LANCHOR9
+ 329 0028 00000000 		.word	.LANCHOR10
+ 330 002c 00000000 		.word	.LANCHOR11
+ 331              		.cfi_endproc
+ 332              	.LFE127:
+ 334              		.comm	keybd_report_data,8,4
+ 335              		.comm	keybd_info,15,4
+ 336              		.section	.rodata.imp_0_rshift,"a",%progbits
+ 337              		.align	2
+ 338              		.set	.LANCHOR5,. + 0
+ 341              	imp_0_rshift:
+ 342 0000 00000000 		.word	keybd_report_data
+ 343 0004 01000000 		.word	1
+ 344 0008 05       		.byte	5
+ 345 0009 00       		.byte	0
+ 346 000a 00       		.byte	0
+ 347 000b 00       		.space	1
+ 348 000c 00000000 		.word	0
+ 349 0010 01000000 		.word	1
+ 350 0014 00000000 		.word	0
+ 351 0018 01000000 		.word	1
+ 352 001c 01000000 		.word	1
+ 353              		.section	.rodata.imp_0_lgui,"a",%progbits
+ 354              		.align	2
+ 355              		.set	.LANCHOR3,. + 0
+ 358              	imp_0_lgui:
+ 359 0000 00000000 		.word	keybd_report_data
+ 360 0004 01000000 		.word	1
+ 361 0008 03       		.byte	3
+ 362 0009 00       		.byte	0
+ 363 000a 00       		.byte	0
+ 364 000b 00       		.space	1
+ 365 000c 00000000 		.word	0
+ 366 0010 01000000 		.word	1
+ 367 0014 00000000 		.word	0
+ 368 0018 01000000 		.word	1
+ 369 001c 01000000 		.word	1
+ 370              		.section	.rodata.imp_0_lalt,"a",%progbits
+ 371              		.align	2
+ARM GAS  /tmp/cca3NXGo.s 			page 15
+
+
+ 372              		.set	.LANCHOR2,. + 0
+ 375              	imp_0_lalt:
+ 376 0000 00000000 		.word	keybd_report_data
+ 377 0004 01000000 		.word	1
+ 378 0008 02       		.byte	2
+ 379 0009 00       		.byte	0
+ 380 000a 00       		.byte	0
+ 381 000b 00       		.space	1
+ 382 000c 00000000 		.word	0
+ 383 0010 01000000 		.word	1
+ 384 0014 00000000 		.word	0
+ 385 0018 01000000 		.word	1
+ 386 001c 01000000 		.word	1
+ 387              		.section	.rodata.imp_0_rgui,"a",%progbits
+ 388              		.align	2
+ 389              		.set	.LANCHOR7,. + 0
+ 392              	imp_0_rgui:
+ 393 0000 00000000 		.word	keybd_report_data
+ 394 0004 01000000 		.word	1
+ 395 0008 07       		.byte	7
+ 396 0009 00       		.byte	0
+ 397 000a 00       		.byte	0
+ 398 000b 00       		.space	1
+ 399 000c 00000000 		.word	0
+ 400 0010 01000000 		.word	1
+ 401 0014 00000000 		.word	0
+ 402 0018 01000000 		.word	1
+ 403 001c 01000000 		.word	1
+ 404              		.section	.rodata.imp_0_key_array,"a",%progbits
+ 405              		.align	2
+ 406              		.set	.LANCHOR8,. + 0
+ 409              	imp_0_key_array:
+ 410 0000 02000000 		.word	keybd_report_data+2
+ 411 0004 08000000 		.word	8
+ 412 0008 00       		.byte	0
+ 413 0009 06       		.byte	6
+ 414 000a 00       		.byte	0
+ 415 000b 00       		.space	1
+ 416 000c 00000000 		.word	0
+ 417 0010 65000000 		.word	101
+ 418 0014 00000000 		.word	0
+ 419 0018 65000000 		.word	101
+ 420 001c 01000000 		.word	1
+ 421              		.section	.rodata.imp_0_ralt,"a",%progbits
+ 422              		.align	2
+ 423              		.set	.LANCHOR6,. + 0
+ 426              	imp_0_ralt:
+ 427 0000 00000000 		.word	keybd_report_data
+ 428 0004 01000000 		.word	1
+ 429 0008 06       		.byte	6
+ 430 0009 00       		.byte	0
+ 431 000a 00       		.byte	0
+ 432 000b 00       		.space	1
+ 433 000c 00000000 		.word	0
+ 434 0010 01000000 		.word	1
+ 435 0014 00000000 		.word	0
+ 436 0018 01000000 		.word	1
+ARM GAS  /tmp/cca3NXGo.s 			page 16
+
+
+ 437 001c 01000000 		.word	1
+ 438              		.section	.rodata.imp_0_lshift,"a",%progbits
+ 439              		.align	2
+ 440              		.set	.LANCHOR1,. + 0
+ 443              	imp_0_lshift:
+ 444 0000 00000000 		.word	keybd_report_data
+ 445 0004 01000000 		.word	1
+ 446 0008 01       		.byte	1
+ 447 0009 00       		.byte	0
+ 448 000a 00       		.byte	0
+ 449 000b 00       		.space	1
+ 450 000c 00000000 		.word	0
+ 451 0010 01000000 		.word	1
+ 452 0014 00000000 		.word	0
+ 453 0018 01000000 		.word	1
+ 454 001c 01000000 		.word	1
+ 455              		.section	.rodata.HID_KEYBRD_Key,"a",%progbits
+ 456              		.align	2
+ 457              		.set	.LANCHOR11,. + 0
+ 460              	HID_KEYBRD_Key:
+ 461 0000 00       		.byte	0
+ 462 0001 60       		.byte	96
+ 463 0002 31       		.byte	49
+ 464 0003 32       		.byte	50
+ 465 0004 33       		.byte	51
+ 466 0005 34       		.byte	52
+ 467 0006 35       		.byte	53
+ 468 0007 36       		.byte	54
+ 469 0008 37       		.byte	55
+ 470 0009 38       		.byte	56
+ 471 000a 39       		.byte	57
+ 472 000b 30       		.byte	48
+ 473 000c 2D       		.byte	45
+ 474 000d 3D       		.byte	61
+ 475 000e 00       		.byte	0
+ 476 000f 0D       		.byte	13
+ 477 0010 09       		.byte	9
+ 478 0011 71       		.byte	113
+ 479 0012 77       		.byte	119
+ 480 0013 65       		.byte	101
+ 481 0014 72       		.byte	114
+ 482 0015 74       		.byte	116
+ 483 0016 79       		.byte	121
+ 484 0017 75       		.byte	117
+ 485 0018 69       		.byte	105
+ 486 0019 6F       		.byte	111
+ 487 001a 70       		.byte	112
+ 488 001b 5B       		.byte	91
+ 489 001c 5D       		.byte	93
+ 490 001d 5C       		.byte	92
+ 491 001e 00       		.byte	0
+ 492 001f 61       		.byte	97
+ 493 0020 73       		.byte	115
+ 494 0021 64       		.byte	100
+ 495 0022 66       		.byte	102
+ 496 0023 67       		.byte	103
+ 497 0024 68       		.byte	104
+ARM GAS  /tmp/cca3NXGo.s 			page 17
+
+
+ 498 0025 6A       		.byte	106
+ 499 0026 6B       		.byte	107
+ 500 0027 6C       		.byte	108
+ 501 0028 3B       		.byte	59
+ 502 0029 27       		.byte	39
+ 503 002a 00       		.byte	0
+ 504 002b 0A       		.byte	10
+ 505 002c 00       		.byte	0
+ 506 002d 00       		.byte	0
+ 507 002e 7A       		.byte	122
+ 508 002f 78       		.byte	120
+ 509 0030 63       		.byte	99
+ 510 0031 76       		.byte	118
+ 511 0032 62       		.byte	98
+ 512 0033 6E       		.byte	110
+ 513 0034 6D       		.byte	109
+ 514 0035 2C       		.byte	44
+ 515 0036 2E       		.byte	46
+ 516 0037 2F       		.byte	47
+ 517 0038 00       		.byte	0
+ 518 0039 00       		.byte	0
+ 519 003a 00       		.byte	0
+ 520 003b 00       		.byte	0
+ 521 003c 00       		.byte	0
+ 522 003d 20       		.byte	32
+ 523 003e 00       		.byte	0
+ 524 003f 00       		.byte	0
+ 525 0040 00       		.byte	0
+ 526 0041 00       		.byte	0
+ 527 0042 00       		.byte	0
+ 528 0043 00       		.byte	0
+ 529 0044 00       		.byte	0
+ 530 0045 00       		.byte	0
+ 531 0046 00       		.byte	0
+ 532 0047 00       		.byte	0
+ 533 0048 00       		.byte	0
+ 534 0049 00       		.byte	0
+ 535 004a 00       		.byte	0
+ 536 004b 00       		.byte	0
+ 537 004c 00       		.byte	0
+ 538 004d 00       		.byte	0
+ 539 004e 00       		.byte	0
+ 540 004f 00       		.byte	0
+ 541 0050 0D       		.byte	13
+ 542 0051 00       		.byte	0
+ 543 0052 00       		.byte	0
+ 544 0053 00       		.byte	0
+ 545 0054 00       		.byte	0
+ 546 0055 00       		.byte	0
+ 547 0056 00       		.byte	0
+ 548 0057 00       		.byte	0
+ 549 0058 00       		.byte	0
+ 550 0059 00       		.byte	0
+ 551 005a 00       		.byte	0
+ 552 005b 37       		.byte	55
+ 553 005c 34       		.byte	52
+ 554 005d 31       		.byte	49
+ARM GAS  /tmp/cca3NXGo.s 			page 18
+
+
+ 555 005e 00       		.byte	0
+ 556 005f 2F       		.byte	47
+ 557 0060 38       		.byte	56
+ 558 0061 35       		.byte	53
+ 559 0062 32       		.byte	50
+ 560 0063 30       		.byte	48
+ 561 0064 2A       		.byte	42
+ 562 0065 39       		.byte	57
+ 563 0066 36       		.byte	54
+ 564 0067 33       		.byte	51
+ 565 0068 2E       		.byte	46
+ 566 0069 2D       		.byte	45
+ 567 006a 2B       		.byte	43
+ 568 006b 00       		.byte	0
+ 569 006c 0A       		.byte	10
+ 570 006d 00       		.byte	0
+ 571 006e 00       		.byte	0
+ 572 006f 00       		.byte	0
+ 573 0070 00       		.byte	0
+ 574 0071 00       		.byte	0
+ 575 0072 00       		.byte	0
+ 576 0073 00       		.byte	0
+ 577 0074 00       		.byte	0
+ 578 0075 00       		.byte	0
+ 579 0076 00       		.byte	0
+ 580 0077 00       		.byte	0
+ 581 0078 00       		.byte	0
+ 582 0079 00       		.byte	0
+ 583 007a 00       		.byte	0
+ 584 007b 00       		.byte	0
+ 585 007c 00       		.byte	0
+ 586 007d 00       		.byte	0
+ 587 007e 00       		.byte	0
+ 588 007f 00       		.byte	0
+ 589 0080 00       		.byte	0
+ 590 0081 00       		.byte	0
+ 591              		.section	.rodata.HID_KEYBRD_ShiftKey,"a",%progbits
+ 592              		.align	2
+ 593              		.set	.LANCHOR10,. + 0
+ 596              	HID_KEYBRD_ShiftKey:
+ 597 0000 00       		.byte	0
+ 598 0001 7E       		.byte	126
+ 599 0002 21       		.byte	33
+ 600 0003 40       		.byte	64
+ 601 0004 23       		.byte	35
+ 602 0005 24       		.byte	36
+ 603 0006 25       		.byte	37
+ 604 0007 5E       		.byte	94
+ 605 0008 26       		.byte	38
+ 606 0009 2A       		.byte	42
+ 607 000a 28       		.byte	40
+ 608 000b 29       		.byte	41
+ 609 000c 5F       		.byte	95
+ 610 000d 2B       		.byte	43
+ 611 000e 00       		.byte	0
+ 612 000f 00       		.byte	0
+ 613 0010 00       		.byte	0
+ARM GAS  /tmp/cca3NXGo.s 			page 19
+
+
+ 614 0011 51       		.byte	81
+ 615 0012 57       		.byte	87
+ 616 0013 45       		.byte	69
+ 617 0014 52       		.byte	82
+ 618 0015 54       		.byte	84
+ 619 0016 59       		.byte	89
+ 620 0017 55       		.byte	85
+ 621 0018 49       		.byte	73
+ 622 0019 4F       		.byte	79
+ 623 001a 50       		.byte	80
+ 624 001b 7B       		.byte	123
+ 625 001c 7D       		.byte	125
+ 626 001d 7C       		.byte	124
+ 627 001e 00       		.byte	0
+ 628 001f 41       		.byte	65
+ 629 0020 53       		.byte	83
+ 630 0021 44       		.byte	68
+ 631 0022 46       		.byte	70
+ 632 0023 47       		.byte	71
+ 633 0024 48       		.byte	72
+ 634 0025 4A       		.byte	74
+ 635 0026 4B       		.byte	75
+ 636 0027 4C       		.byte	76
+ 637 0028 3A       		.byte	58
+ 638 0029 22       		.byte	34
+ 639 002a 00       		.byte	0
+ 640 002b 0A       		.byte	10
+ 641 002c 00       		.byte	0
+ 642 002d 00       		.byte	0
+ 643 002e 5A       		.byte	90
+ 644 002f 58       		.byte	88
+ 645 0030 43       		.byte	67
+ 646 0031 56       		.byte	86
+ 647 0032 42       		.byte	66
+ 648 0033 4E       		.byte	78
+ 649 0034 4D       		.byte	77
+ 650 0035 3C       		.byte	60
+ 651 0036 3E       		.byte	62
+ 652 0037 3F       		.byte	63
+ 653 0038 00       		.byte	0
+ 654 0039 00       		.byte	0
+ 655 003a 00       		.byte	0
+ 656 003b 00       		.byte	0
+ 657 003c 00       		.byte	0
+ 658 003d 00       		.byte	0
+ 659 003e 00       		.byte	0
+ 660 003f 00       		.byte	0
+ 661 0040 00       		.byte	0
+ 662 0041 00       		.byte	0
+ 663 0042 00       		.byte	0
+ 664 0043 00       		.byte	0
+ 665 0044 00       		.byte	0
+ 666 0045 00       		.byte	0
+ 667 0046 00       		.byte	0
+ 668 0047 00       		.byte	0
+ 669 0048 00       		.byte	0
+ 670 0049 00       		.byte	0
+ARM GAS  /tmp/cca3NXGo.s 			page 20
+
+
+ 671 004a 00       		.byte	0
+ 672 004b 00       		.byte	0
+ 673 004c 00       		.byte	0
+ 674 004d 00       		.byte	0
+ 675 004e 00       		.byte	0
+ 676 004f 00       		.byte	0
+ 677 0050 00       		.byte	0
+ 678 0051 00       		.byte	0
+ 679 0052 00       		.byte	0
+ 680 0053 00       		.byte	0
+ 681 0054 00       		.byte	0
+ 682 0055 00       		.byte	0
+ 683 0056 00       		.byte	0
+ 684 0057 00       		.byte	0
+ 685 0058 00       		.byte	0
+ 686 0059 00       		.byte	0
+ 687 005a 00       		.byte	0
+ 688 005b 00       		.byte	0
+ 689 005c 00       		.byte	0
+ 690 005d 00       		.byte	0
+ 691 005e 00       		.byte	0
+ 692 005f 00       		.byte	0
+ 693 0060 00       		.byte	0
+ 694 0061 00       		.byte	0
+ 695 0062 00       		.byte	0
+ 696 0063 00       		.byte	0
+ 697 0064 00       		.byte	0
+ 698 0065 00       		.byte	0
+ 699 0066 00       		.byte	0
+ 700 0067 00       		.byte	0
+ 701 0068 00       		.byte	0
+ 702 0069 00       		.byte	0
+ 703 006a 00       		.byte	0
+ 704 006b 00       		.byte	0
+ 705 006c 00       		.byte	0
+ 706 006d 00       		.byte	0
+ 707 006e 00       		.byte	0
+ 708 006f 00       		.byte	0
+ 709 0070 00       		.byte	0
+ 710 0071 00       		.byte	0
+ 711 0072 00       		.byte	0
+ 712 0073 00       		.byte	0
+ 713 0074 00       		.byte	0
+ 714 0075 00       		.byte	0
+ 715 0076 00       		.byte	0
+ 716 0077 00       		.byte	0
+ 717 0078 00       		.byte	0
+ 718 0079 00       		.byte	0
+ 719 007a 00       		.byte	0
+ 720 007b 00       		.byte	0
+ 721 007c 00       		.byte	0
+ 722 007d 00       		.byte	0
+ 723 007e 00       		.byte	0
+ 724 007f 00       		.byte	0
+ 725 0080 00       		.byte	0
+ 726 0081 00       		.byte	0
+ 727              		.section	.rodata.imp_0_rctrl,"a",%progbits
+ARM GAS  /tmp/cca3NXGo.s 			page 21
+
+
+ 728              		.align	2
+ 729              		.set	.LANCHOR4,. + 0
+ 732              	imp_0_rctrl:
+ 733 0000 00000000 		.word	keybd_report_data
+ 734 0004 01000000 		.word	1
+ 735 0008 04       		.byte	4
+ 736 0009 00       		.byte	0
+ 737 000a 00       		.byte	0
+ 738 000b 00       		.space	1
+ 739 000c 00000000 		.word	0
+ 740 0010 01000000 		.word	1
+ 741 0014 00000000 		.word	0
+ 742 0018 01000000 		.word	1
+ 743 001c 01000000 		.word	1
+ 744              		.section	.rodata.imp_0_lctrl,"a",%progbits
+ 745              		.align	2
+ 746              		.set	.LANCHOR0,. + 0
+ 749              	imp_0_lctrl:
+ 750 0000 00000000 		.word	keybd_report_data
+ 751 0004 01000000 		.word	1
+ 752 0008 00       		.byte	0
+ 753 0009 00       		.byte	0
+ 754 000a 00       		.byte	0
+ 755 000b 00       		.space	1
+ 756 000c 00000000 		.word	0
+ 757 0010 01000000 		.word	1
+ 758 0014 00000000 		.word	0
+ 759 0018 01000000 		.word	1
+ 760 001c 01000000 		.word	1
+ 761              		.section	.rodata.HID_KEYBRD_Codes,"a",%progbits
+ 762              		.align	2
+ 763              		.set	.LANCHOR9,. + 0
+ 766              	HID_KEYBRD_Codes:
+ 767 0000 00       		.byte	0
+ 768 0001 00       		.byte	0
+ 769 0002 00       		.byte	0
+ 770 0003 00       		.byte	0
+ 771 0004 1F       		.byte	31
+ 772 0005 32       		.byte	50
+ 773 0006 30       		.byte	48
+ 774 0007 21       		.byte	33
+ 775 0008 13       		.byte	19
+ 776 0009 22       		.byte	34
+ 777 000a 23       		.byte	35
+ 778 000b 24       		.byte	36
+ 779 000c 18       		.byte	24
+ 780 000d 25       		.byte	37
+ 781 000e 26       		.byte	38
+ 782 000f 27       		.byte	39
+ 783 0010 34       		.byte	52
+ 784 0011 33       		.byte	51
+ 785 0012 19       		.byte	25
+ 786 0013 1A       		.byte	26
+ 787 0014 11       		.byte	17
+ 788 0015 14       		.byte	20
+ 789 0016 20       		.byte	32
+ 790 0017 15       		.byte	21
+ARM GAS  /tmp/cca3NXGo.s 			page 22
+
+
+ 791 0018 17       		.byte	23
+ 792 0019 31       		.byte	49
+ 793 001a 12       		.byte	18
+ 794 001b 2F       		.byte	47
+ 795 001c 16       		.byte	22
+ 796 001d 2E       		.byte	46
+ 797 001e 02       		.byte	2
+ 798 001f 03       		.byte	3
+ 799 0020 04       		.byte	4
+ 800 0021 05       		.byte	5
+ 801 0022 06       		.byte	6
+ 802 0023 07       		.byte	7
+ 803 0024 08       		.byte	8
+ 804 0025 09       		.byte	9
+ 805 0026 0A       		.byte	10
+ 806 0027 0B       		.byte	11
+ 807 0028 2B       		.byte	43
+ 808 0029 6E       		.byte	110
+ 809 002a 0F       		.byte	15
+ 810 002b 10       		.byte	16
+ 811 002c 3D       		.byte	61
+ 812 002d 0C       		.byte	12
+ 813 002e 0D       		.byte	13
+ 814 002f 1B       		.byte	27
+ 815 0030 1C       		.byte	28
+ 816 0031 1D       		.byte	29
+ 817 0032 2A       		.byte	42
+ 818 0033 28       		.byte	40
+ 819 0034 29       		.byte	41
+ 820 0035 01       		.byte	1
+ 821 0036 35       		.byte	53
+ 822 0037 36       		.byte	54
+ 823 0038 37       		.byte	55
+ 824 0039 1E       		.byte	30
+ 825 003a 70       		.byte	112
+ 826 003b 71       		.byte	113
+ 827 003c 72       		.byte	114
+ 828 003d 73       		.byte	115
+ 829 003e 74       		.byte	116
+ 830 003f 75       		.byte	117
+ 831 0040 76       		.byte	118
+ 832 0041 77       		.byte	119
+ 833 0042 78       		.byte	120
+ 834 0043 79       		.byte	121
+ 835 0044 7A       		.byte	122
+ 836 0045 7B       		.byte	123
+ 837 0046 7C       		.byte	124
+ 838 0047 7D       		.byte	125
+ 839 0048 7E       		.byte	126
+ 840 0049 4B       		.byte	75
+ 841 004a 50       		.byte	80
+ 842 004b 55       		.byte	85
+ 843 004c 4C       		.byte	76
+ 844 004d 51       		.byte	81
+ 845 004e 56       		.byte	86
+ 846 004f 59       		.byte	89
+ 847 0050 4F       		.byte	79
+ARM GAS  /tmp/cca3NXGo.s 			page 23
+
+
+ 848 0051 54       		.byte	84
+ 849 0052 53       		.byte	83
+ 850 0053 5A       		.byte	90
+ 851 0054 5F       		.byte	95
+ 852 0055 64       		.byte	100
+ 853 0056 69       		.byte	105
+ 854 0057 6A       		.byte	106
+ 855 0058 6C       		.byte	108
+ 856 0059 5D       		.byte	93
+ 857 005a 62       		.byte	98
+ 858 005b 67       		.byte	103
+ 859 005c 5C       		.byte	92
+ 860 005d 61       		.byte	97
+ 861 005e 66       		.byte	102
+ 862 005f 5B       		.byte	91
+ 863 0060 60       		.byte	96
+ 864 0061 65       		.byte	101
+ 865 0062 63       		.byte	99
+ 866 0063 68       		.byte	104
+ 867 0064 2D       		.byte	45
+ 868 0065 81       		.byte	-127
+ 869 0066 00       		.byte	0
+ 870 0067 00       		.byte	0
+ 871 0068 00       		.byte	0
+ 872 0069 00       		.byte	0
+ 873 006a 00       		.byte	0
+ 874 006b 00       		.byte	0
+ 875 006c 00       		.byte	0
+ 876 006d 00       		.byte	0
+ 877 006e 00       		.byte	0
+ 878 006f 00       		.byte	0
+ 879 0070 00       		.byte	0
+ 880 0071 00       		.byte	0
+ 881 0072 00       		.byte	0
+ 882 0073 00       		.byte	0
+ 883 0074 00       		.byte	0
+ 884 0075 00       		.byte	0
+ 885 0076 00       		.byte	0
+ 886 0077 00       		.byte	0
+ 887 0078 00       		.byte	0
+ 888 0079 00       		.byte	0
+ 889 007a 00       		.byte	0
+ 890 007b 00       		.byte	0
+ 891 007c 00       		.byte	0
+ 892 007d 00       		.byte	0
+ 893 007e 00       		.byte	0
+ 894 007f 00       		.byte	0
+ 895 0080 00       		.byte	0
+ 896 0081 00       		.byte	0
+ 897 0082 00       		.byte	0
+ 898 0083 00       		.byte	0
+ 899 0084 00       		.byte	0
+ 900 0085 6B       		.byte	107
+ 901 0086 00       		.byte	0
+ 902 0087 38       		.byte	56
+ 903 0088 00       		.byte	0
+ 904 0089 00       		.byte	0
+ARM GAS  /tmp/cca3NXGo.s 			page 24
+
+
+ 905 008a 00       		.byte	0
+ 906 008b 00       		.byte	0
+ 907 008c 00       		.byte	0
+ 908 008d 00       		.byte	0
+ 909 008e 00       		.byte	0
+ 910 008f 00       		.byte	0
+ 911 0090 00       		.byte	0
+ 912 0091 00       		.byte	0
+ 913 0092 00       		.byte	0
+ 914 0093 00       		.byte	0
+ 915 0094 00       		.byte	0
+ 916 0095 00       		.byte	0
+ 917 0096 00       		.byte	0
+ 918 0097 00       		.byte	0
+ 919 0098 00       		.byte	0
+ 920 0099 00       		.byte	0
+ 921 009a 00       		.byte	0
+ 922 009b 00       		.byte	0
+ 923 009c 00       		.byte	0
+ 924 009d 00       		.byte	0
+ 925 009e 00       		.byte	0
+ 926 009f 00       		.byte	0
+ 927 00a0 00       		.byte	0
+ 928 00a1 00       		.byte	0
+ 929 00a2 00       		.byte	0
+ 930 00a3 00       		.byte	0
+ 931 00a4 00       		.byte	0
+ 932 00a5 00       		.byte	0
+ 933 00a6 00       		.byte	0
+ 934 00a7 00       		.byte	0
+ 935 00a8 00       		.byte	0
+ 936 00a9 00       		.byte	0
+ 937 00aa 00       		.byte	0
+ 938 00ab 00       		.byte	0
+ 939 00ac 00       		.byte	0
+ 940 00ad 00       		.byte	0
+ 941 00ae 00       		.byte	0
+ 942 00af 00       		.byte	0
+ 943 00b0 00       		.byte	0
+ 944 00b1 00       		.byte	0
+ 945 00b2 00       		.byte	0
+ 946 00b3 00       		.byte	0
+ 947 00b4 00       		.byte	0
+ 948 00b5 00       		.byte	0
+ 949 00b6 00       		.byte	0
+ 950 00b7 00       		.byte	0
+ 951 00b8 00       		.byte	0
+ 952 00b9 00       		.byte	0
+ 953 00ba 00       		.byte	0
+ 954 00bb 00       		.byte	0
+ 955 00bc 00       		.byte	0
+ 956 00bd 00       		.byte	0
+ 957 00be 00       		.byte	0
+ 958 00bf 00       		.byte	0
+ 959 00c0 00       		.byte	0
+ 960 00c1 00       		.byte	0
+ 961 00c2 00       		.byte	0
+ARM GAS  /tmp/cca3NXGo.s 			page 25
+
+
+ 962 00c3 00       		.byte	0
+ 963 00c4 00       		.byte	0
+ 964 00c5 00       		.byte	0
+ 965 00c6 00       		.byte	0
+ 966 00c7 00       		.byte	0
+ 967 00c8 00       		.byte	0
+ 968 00c9 00       		.byte	0
+ 969 00ca 00       		.byte	0
+ 970 00cb 00       		.byte	0
+ 971 00cc 00       		.byte	0
+ 972 00cd 00       		.byte	0
+ 973 00ce 00       		.byte	0
+ 974 00cf 00       		.byte	0
+ 975 00d0 00       		.byte	0
+ 976 00d1 00       		.byte	0
+ 977 00d2 00       		.byte	0
+ 978 00d3 00       		.byte	0
+ 979 00d4 00       		.byte	0
+ 980 00d5 00       		.byte	0
+ 981 00d6 00       		.byte	0
+ 982 00d7 00       		.byte	0
+ 983 00d8 00       		.byte	0
+ 984 00d9 00       		.byte	0
+ 985 00da 00       		.byte	0
+ 986 00db 00       		.byte	0
+ 987 00dc 00       		.byte	0
+ 988 00dd 00       		.byte	0
+ 989 00de 00       		.byte	0
+ 990 00df 00       		.byte	0
+ 991 00e0 3A       		.byte	58
+ 992 00e1 2C       		.byte	44
+ 993 00e2 3C       		.byte	60
+ 994 00e3 7F       		.byte	127
+ 995 00e4 40       		.byte	64
+ 996 00e5 39       		.byte	57
+ 997 00e6 3E       		.byte	62
+ 998 00e7 80       		.byte	-128
+ 999              		.text
+ 1000              	.Letext0:
+ 1001              		.file 2 "/home/ada/Downloads/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/machine/_default_t
+ 1002              		.file 3 "/home/ada/Downloads/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/sys/_stdint.h"
+ 1003              		.file 4 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h"
+ 1004              		.file 5 "Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid.h"
+ 1005              		.file 6 "Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid_keybd.h"
+ 1006              		.file 7 "Middlewares/ST/STM32_USB_Host_Library/Class/HID/Inc/usbh_hid_parser.h"
+ 1007              		.file 8 "Drivers/CMSIS/Include/core_cm4.h"
+ARM GAS  /tmp/cca3NXGo.s 			page 26
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usbh_hid_keybd.c
+     /tmp/cca3NXGo.s:22     .text.USBH_HID_KeybdDecode:00000000 $t
+     /tmp/cca3NXGo.s:26     .text.USBH_HID_KeybdDecode:00000000 USBH_HID_KeybdDecode
+     /tmp/cca3NXGo.s:148    .text.USBH_HID_KeybdDecode:00000098 $d
+                            *COM*:00000008 keybd_report_data
+                            *COM*:0000000f keybd_info
+     /tmp/cca3NXGo.s:163    .text.USBH_HID_KeybdInit:00000000 $t
+     /tmp/cca3NXGo.s:168    .text.USBH_HID_KeybdInit:00000000 USBH_HID_KeybdInit
+     /tmp/cca3NXGo.s:242    .text.USBH_HID_KeybdInit:0000004c $d
+     /tmp/cca3NXGo.s:248    .text.USBH_HID_GetKeybdInfo:00000000 $t
+     /tmp/cca3NXGo.s:253    .text.USBH_HID_GetKeybdInfo:00000000 USBH_HID_GetKeybdInfo
+     /tmp/cca3NXGo.s:280    .text.USBH_HID_GetKeybdInfo:00000010 $d
+     /tmp/cca3NXGo.s:285    .text.USBH_HID_GetASCIICode:00000000 $t
+     /tmp/cca3NXGo.s:290    .text.USBH_HID_GetASCIICode:00000000 USBH_HID_GetASCIICode
+     /tmp/cca3NXGo.s:328    .text.USBH_HID_GetASCIICode:00000024 $d
+     /tmp/cca3NXGo.s:337    .rodata.imp_0_rshift:00000000 $d
+     /tmp/cca3NXGo.s:341    .rodata.imp_0_rshift:00000000 imp_0_rshift
+     /tmp/cca3NXGo.s:354    .rodata.imp_0_lgui:00000000 $d
+     /tmp/cca3NXGo.s:358    .rodata.imp_0_lgui:00000000 imp_0_lgui
+     /tmp/cca3NXGo.s:371    .rodata.imp_0_lalt:00000000 $d
+     /tmp/cca3NXGo.s:375    .rodata.imp_0_lalt:00000000 imp_0_lalt
+     /tmp/cca3NXGo.s:388    .rodata.imp_0_rgui:00000000 $d
+     /tmp/cca3NXGo.s:392    .rodata.imp_0_rgui:00000000 imp_0_rgui
+     /tmp/cca3NXGo.s:405    .rodata.imp_0_key_array:00000000 $d
+     /tmp/cca3NXGo.s:409    .rodata.imp_0_key_array:00000000 imp_0_key_array
+     /tmp/cca3NXGo.s:422    .rodata.imp_0_ralt:00000000 $d
+     /tmp/cca3NXGo.s:426    .rodata.imp_0_ralt:00000000 imp_0_ralt
+     /tmp/cca3NXGo.s:439    .rodata.imp_0_lshift:00000000 $d
+     /tmp/cca3NXGo.s:443    .rodata.imp_0_lshift:00000000 imp_0_lshift
+     /tmp/cca3NXGo.s:456    .rodata.HID_KEYBRD_Key:00000000 $d
+     /tmp/cca3NXGo.s:460    .rodata.HID_KEYBRD_Key:00000000 HID_KEYBRD_Key
+     /tmp/cca3NXGo.s:592    .rodata.HID_KEYBRD_ShiftKey:00000000 $d
+     /tmp/cca3NXGo.s:596    .rodata.HID_KEYBRD_ShiftKey:00000000 HID_KEYBRD_ShiftKey
+     /tmp/cca3NXGo.s:728    .rodata.imp_0_rctrl:00000000 $d
+     /tmp/cca3NXGo.s:732    .rodata.imp_0_rctrl:00000000 imp_0_rctrl
+     /tmp/cca3NXGo.s:745    .rodata.imp_0_lctrl:00000000 $d
+     /tmp/cca3NXGo.s:749    .rodata.imp_0_lctrl:00000000 imp_0_lctrl
+     /tmp/cca3NXGo.s:762    .rodata.HID_KEYBRD_Codes:00000000 $d
+     /tmp/cca3NXGo.s:766    .rodata.HID_KEYBRD_Codes:00000000 HID_KEYBRD_Codes
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+fifo_read
+HID_ReadItem
+fifo_init
