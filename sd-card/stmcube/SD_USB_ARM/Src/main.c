@@ -59,7 +59,7 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-SD_HandleTypeDef hsd;
+SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -69,7 +69,7 @@ SD_HandleTypeDef hsd;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_SDIO_SD_Init(void);
+static void MX_SPI1_Init(void);
 void MX_USB_HOST_Process(void);
 
 /* USER CODE BEGIN PFP */
@@ -135,6 +135,11 @@ int main(void)
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET) ;
 		for (j =0; j < 2000000; j++) ;
 	}
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_FATFS_Init();
+  MX_USB_HOST_Init();
+  MX_SPI1_Init();
 
 
 //	if(FATFS_LinkDriver(&SD_Driver, mynewdiskPath) == 0)
@@ -223,8 +228,8 @@ void SystemClock_Config(void)
 	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/* SDIO init function */
-static void MX_SDIO_SD_Init(void)
+/* SPI1 init function */
+static void MX_SPI1_Init(void)
 {
 
 	hsd.Instance = SDIO;

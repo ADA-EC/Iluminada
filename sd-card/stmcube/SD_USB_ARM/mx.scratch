@@ -154,10 +154,7 @@
 							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c</name>
 						</file>
 						<file>
-							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c</name>
-						</file>
-						<file>
-							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c</name>
+							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c</name>
 						</file>
 						<file>
 							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c</name>
@@ -218,19 +215,11 @@
                                 </file>
 
                                 <file>
-                                 <name>Src\bsp_driver_sd.c</name>
-                                </file>
-
-                                <file>
-                                 <name>Src\sd_diskio.c</name>
+                                 <name>Src\usbh_diskio.c</name>
                                 </file>
 
                                 <file>
                                  <name>Src\fatfs.c</name>
-                                </file>
-
-                                <file>
-                                 <name>Src\usbh_diskio.c</name>
                                 </file>
 
                                 <file>
