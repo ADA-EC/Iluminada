@@ -9,8 +9,7 @@
 
 <filestoremove>
 	<file>
-	   		<name>Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_sdmmc.c</name>
-	   		<name>Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_mmc.c</name>
+	   		<name>Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c</name>
 	</file>
 </filestoremove>
 
@@ -64,6 +63,7 @@
 	   <include>Drivers\STM32F4xx_HAL_Driver\Inc</include>
 	   <include>Drivers\STM32F4xx_HAL_Driver\Inc\Legacy</include>
 	   <include>Drivers\CMSIS\Device\ST\STM32F4xx\Include</include>
+	   <include>Middlewares\Third_Party\FatFs\src</include>
 	   <include>Drivers\CMSIS\Include</include>
 
     </Cincludes>
@@ -72,12 +72,33 @@
 
     <underRoot>false</underRoot>
 
+      <group>
+        <name>Middlewares</name>  
+                    <group>
+                            <name>FatFs</name>
+                                            <file>
+                                                    <name>Middlewares/Third_Party/FatFs/src/option/syscall.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>Middlewares/Third_Party/FatFs/src/diskio.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>Middlewares/Third_Party/FatFs/src/ff.c</name>
+                                            </file>
+                                            <file>
+                                                    <name>Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</name>
+                                            </file>
+                </group>
+      </group> 
 	   <group>
 	    <name>Drivers</name> 
 		   <group>
 		 		<name>STM32F4xx_HAL_Driver</name>
 						<file>
-							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c</name>
+							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c</name>
+						</file>
+						<file>
+							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c</name>
 						</file>
 						<file>
 							<name>Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c</name>
@@ -135,6 +156,18 @@
 	      <name>User</name>  
                                 <file>
                                  <name>Src\main.c</name>
+                                </file>
+
+                                <file>
+                                 <name>Src\bsp_driver_sd.c</name>
+                                </file>
+
+                                <file>
+                                 <name>Src\sd_diskio.c</name>
+                                </file>
+
+                                <file>
+                                 <name>Src\fatfs.c</name>
                                 </file>
 
                                 <file>
